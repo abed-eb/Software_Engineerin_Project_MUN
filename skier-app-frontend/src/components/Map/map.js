@@ -10,6 +10,7 @@ import Control from "react-leaflet-custom-control";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
 import { iconFlag, iconToilet } from "./icon";
+import axios from "axios";
 
 const Map = () => {
   const mapRef = useRef(null);
@@ -28,6 +29,10 @@ const Map = () => {
   const [end, setEnd] = useState(null);
   const [path, setPath] = useState(null);
   const [locateUser, setLocateUser] = useState(false);
+
+  useEffect(() => {
+    getLocations();
+  }, []);
 
   const findPath = () => {
     if (start !== null && end !== null) {
@@ -50,6 +55,17 @@ const Map = () => {
     }
   };
 
+  const getLocations = async () => {
+    axios
+      .get("https://test-repo-93zz.onrender.com/api/v1/locations")
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const findUserLocation = () => {
     setLocateUser(true);
   };
@@ -58,7 +74,7 @@ const Map = () => {
       <MapContainer
         ref={mapRef}
         center={[71.6, -43]}
-        zoom={13}
+        zoom={5}
         zoomControl={true}
         whenCreated={(mapInstance) => {
           mapRef.current = mapInstance;
