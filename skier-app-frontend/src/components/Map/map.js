@@ -19,7 +19,10 @@ const Map = () => {
     { id: 2, name: "B", loc: [71.6, -43] },
     { id: 3, name: "C", loc: [71.7, -42] },
     { id: 4, name: "D", loc: [71.9, -41] },
-    { id: 5, name: "E", loc: [71.505, -40] },
+    { id: 5, name: "E", loc: [71.8, -41.3] },
+    { id: 5, name: "F", loc: [71.1, -39.5] },
+    { id: 5, name: "G", loc: [71.146, -40.124] },
+    { id: 5, name: "H", loc: [71.975, -42.23] },
   ]);
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
@@ -86,7 +89,9 @@ const Map = () => {
             </Marker>
           );
         })}
-        <Marker icon={iconToilet} position={[71.507, -40.1]} />
+        <Marker icon={iconToilet} position={[71.91, -41]} />
+        <Marker icon={iconToilet} position={[71.51, -41]} />
+        <Marker icon={iconToilet} position={[71.147, -40.124]} />
         {path !== null && (
           <Polyline pathOptions={limeOptions} positions={[path]} />
         )}

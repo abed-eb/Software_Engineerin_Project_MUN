@@ -17,7 +17,7 @@ export { iconBlue };
 var iconFlag = new L.Icon({
   shadowUrl: null,
   iconAnchor: new L.Point(10, 10),
-  iconSize: new L.Point(50, 50),
+  iconSize: new L.Point(40, 40),
   iconUrl: flag,
   //iconSize: new L.Point(100, 57),
   // className: 'leaflet-div-icon'
@@ -28,7 +28,7 @@ export { iconFlag };
 var iconToilet = new L.Icon({
   shadowUrl: null,
   iconAnchor: new L.Point(10, 10),
-  iconSize: new L.Point(50, 50),
+  iconSize: new L.Point(30, 30),
   iconUrl: tiolet,
   //iconSize: new L.Point(100, 57),
   // className: 'leaflet-div-icon'
