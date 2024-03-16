@@ -11,7 +11,7 @@ db();
 app.use(express.json());
 
 //Use Routes
-app.use("/api/v1/map", mapRoute);
+app.use("/api/v1/", mapRoute);
 app.use("/api/v1/location", locationRoute);
 
 app.get("/", (req, res) => {
