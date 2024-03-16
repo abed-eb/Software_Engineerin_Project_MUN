@@ -1,17 +1,6 @@
-const Map = require("../models/map.model");
 const Restroom = require("../models/restroom.model");
 const Station = require("../models/station.model");
 const Restaurant = require("../models/restaurant.model");
-
-// Get all map titles
-const getMapTitles = async (req, res) => {
-  try {
-    const mapTitles = await Map.find({});
-    return res.json({ status: "ok", mapTitles });
-  } catch (error) {
-    return res.json({ status: "error", error: "No map titles created" });
-  }
-};
 
 // Get all coordinate
 const getCoordinates = async (req, res) => {
@@ -25,4 +14,4 @@ const getCoordinates = async (req, res) => {
   }
 };
 
-module.exports = { getMapTitles, getCoordinates };
+module.exports = { getCoordinates };
