@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
 
 const db = async () => {
-  await mongoose.connect("mongodb://127.0.0.1/my_database", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(
+    "mongodb+srv://faham:faham114@cluster0.dwhvgtc.mongodb.net/",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  );
   console.log("conntected db");
 };
 
