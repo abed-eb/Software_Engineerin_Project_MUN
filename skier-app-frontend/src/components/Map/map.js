@@ -57,7 +57,7 @@ const Map = () => {
 
   const getLocations = async () => {
     axios
-      .get("https://test-repo-93zz.onrender.com/api/v1/locations")
+      .get("http://localhost:4000/api/v1/locations")
       .then((res) => {
         console.log(res.data);
       })
@@ -121,7 +121,7 @@ const Map = () => {
         <Control position="top-right">
           {/* <div> */}
           <button
-            className="text-black bg-sky-900 p-4 w-full text-md"
+            className="text-black bg-sky-900 p-4 w-full text-lg"
             onClick={findPath}
           >
             Show Path
