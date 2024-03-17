@@ -9,13 +9,19 @@ import {
 import Control from "react-leaflet-custom-control";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
-import { iconEnd, iconFlag, iconStart, iconToilet } from "./icon";
+import {
+  iconEnd,
+  iconFlag,
+  iconRestaurant,
+  iconStart,
+  iconToilet,
+} from "./icon";
 import axios from "axios";
 
 const Map = () => {
   const mapRef = useRef(null);
   const limeOptions = { color: "lime" };
-  const [markers, setMarkers] = useState([
+  const [stations, setStations] = useState([
     { id: 1, name: "A", loc: [71.509, -41] },
     { id: 2, name: "B", loc: [71.6, -43] },
     { id: 3, name: "C", loc: [71.7, -42] },
@@ -24,6 +30,18 @@ const Map = () => {
     { id: 6, name: "F", loc: [71.1, -39.5] },
     { id: 7, name: "G", loc: [71.146, -40.124] },
     { id: 8, name: "H", loc: [71.975, -42.23] },
+  ]);
+  const [restrooms, setRestrooms] = useState([
+    { id: 1, name: "Restroom A", loc: [71.51, -41.01] },
+    { id: 3, name: "Restroom C", loc: [71.701, -41.999] },
+    { id: 5, name: "Restroom E", loc: [71.801, -41.34] },
+    { id: 7, name: "Restroom G", loc: [71.147, -40.125] },
+  ]);
+  const [restaurants, setRestaurants] = useState([
+    { id: 1, name: "Restaurant A", loc: [71.507, -40.9] },
+    { id: 2, name: "Restaurant B", loc: [71.603, -43.08] },
+    { id: 5, name: "Restaurant E", loc: [71.798, -41.309] },
+    { id: 8, name: "Restaurant H", loc: [71.98, -42.26] },
   ]);
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
@@ -45,13 +63,13 @@ const Map = () => {
   };
 
   const selectMarker = (id) => {
-    if (start == null) setStart(markers.filter((m) => m.id === id));
-    else if (end == null) setEnd(markers.filter((m) => m.id === id));
+    if (start == null) setStart(stations.filter((m) => m.id === id));
+    else if (end == null) setEnd(stations.filter((m) => m.id === id));
     else {
       console.log(id);
       setEnd(null);
       setPath(null);
-      setStart(markers.filter((m) => m.id === id));
+      setStart(stations.filter((m) => m.id === id));
     }
   };
 
@@ -91,29 +109,45 @@ const Map = () => {
           url="https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
           subdomains={["mt1", "mt2", "mt3"]}
         />
-        {markers.map((marker) => {
+        {stations.map((station) => {
           return (
             <Marker
-              key={marker.id}
+              key={station.id}
               eventHandlers={{
-                click: (e) => selectMarker(marker.id),
+                click: (e) => selectMarker(station.id),
               }}
               icon={
-                start && marker.id === start[0].id
+                start && station.id === start[0].id
                   ? iconStart
-                  : end && marker.id === end[0].id
+                  : end && station.id === end[0].id
                   ? iconEnd
                   : iconFlag
               }
-              position={marker.loc}
+              position={station.loc}
             >
-              <Popup>{marker.name}</Popup>
+              <Popup>{station.name}</Popup>
             </Marker>
           );
         })}
-        <Marker icon={iconToilet} position={[71.91, -41]} />
-        <Marker icon={iconToilet} position={[71.51, -41]} />
-        <Marker icon={iconToilet} position={[71.147, -40.124]} />
+        {restrooms.map((restroom) => {
+          return (
+            <Marker key={restroom.id} icon={iconToilet} position={restroom.loc}>
+              <Popup>{restroom.name}</Popup>
+            </Marker>
+          );
+        })}
+        {restaurants.map((restaurant) => {
+          return (
+            <Marker
+              key={restaurant.id}
+              icon={iconRestaurant}
+              position={restaurant.loc}
+            >
+              <Popup>{restaurant.name}</Popup>
+            </Marker>
+          );
+        })}
+
         {path !== null && (
           <Polyline pathOptions={limeOptions} positions={[path]} />
         )}

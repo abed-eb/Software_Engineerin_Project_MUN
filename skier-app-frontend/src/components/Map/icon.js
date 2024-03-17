@@ -4,6 +4,7 @@ import marker from "../../Assets/location.png";
 import tiolet from "../../Assets/toilet.png";
 import end from "../../Assets/end.png";
 import start from "../../Assets/start.png";
+import restaurant from "../../Assets/restaurant.png";
 import "./marker.css";
 var iconBlue = new L.Icon({
   shadowUrl: null,
@@ -59,3 +60,14 @@ var iconEnd = new L.Icon({
 });
 
 export { iconEnd };
+
+var iconRestaurant = new L.Icon({
+  shadowUrl: null,
+  iconAnchor: new L.Point(10, 10),
+  iconSize: new L.Point(30, 30),
+  iconUrl: restaurant,
+  //iconSize: new L.Point(100, 57),
+  // className: 'leaflet-div-icon'
+});
+
+export { iconRestaurant };
