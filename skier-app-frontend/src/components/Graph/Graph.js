@@ -5,6 +5,7 @@ import flag from "../../Assets/flag.png";
 import startFlag from "../../Assets/start.png";
 import endFlag from "../../Assets/end.png";
 import useImage from "use-image";
+import axios from "axios";
 const Graph = () => {
   const [flagIcon] = useImage(flag);
   const [startFlagIcon] = useImage(startFlag);
