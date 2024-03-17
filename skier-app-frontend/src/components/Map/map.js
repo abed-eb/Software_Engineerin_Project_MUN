@@ -22,26 +22,26 @@ const Map = () => {
   const mapRef = useRef(null);
   const limeOptions = { color: "lime" };
   const [stations, setStations] = useState([
-    { id: 1, name: "A", loc: [71.509, -41] },
-    { id: 2, name: "B", loc: [71.6, -43] },
-    { id: 3, name: "C", loc: [71.7, -42] },
-    { id: 4, name: "D", loc: [71.9, -41] },
-    { id: 5, name: "E", loc: [71.8, -41.3] },
-    { id: 6, name: "F", loc: [71.1, -39.5] },
-    { id: 7, name: "G", loc: [71.146, -40.124] },
-    { id: 8, name: "H", loc: [71.975, -42.23] },
+    { id: 0, name: "A", loc: [71.509, -41] },
+    { id: 1, name: "B", loc: [71.6, -43] },
+    { id: 2, name: "C", loc: [71.7, -42] },
+    { id: 3, name: "D", loc: [71.9, -41] },
+    { id: 4, name: "E", loc: [71.8, -41.3] },
+    { id: 5, name: "F", loc: [71.1, -39.5] },
+    { id: 6, name: "G", loc: [71.146, -40.124] },
+    { id: 7, name: "H", loc: [71.975, -42.23] },
   ]);
   const [restrooms, setRestrooms] = useState([
-    { id: 1, name: "Restroom A", loc: [71.51, -41.01] },
-    { id: 3, name: "Restroom C", loc: [71.701, -41.999] },
-    { id: 5, name: "Restroom E", loc: [71.801, -41.34] },
-    { id: 7, name: "Restroom G", loc: [71.147, -40.125] },
+    { id: 0, name: "Restroom A", loc: [71.51, -41.01] },
+    { id: 1, name: "Restroom C", loc: [71.701, -41.999] },
+    { id: 2, name: "Restroom E", loc: [71.801, -41.34] },
+    { id: 3, name: "Restroom G", loc: [71.147, -40.125] },
   ]);
   const [restaurants, setRestaurants] = useState([
-    { id: 1, name: "Restaurant A", loc: [71.507, -40.9] },
-    { id: 2, name: "Restaurant B", loc: [71.603, -43.08] },
-    { id: 5, name: "Restaurant E", loc: [71.798, -41.309] },
-    { id: 8, name: "Restaurant H", loc: [71.98, -42.26] },
+    { id: 0, name: "Restaurant A", loc: [71.507, -40.9] },
+    { id: 1, name: "Restaurant B", loc: [71.603, -43.08] },
+    { id: 2, name: "Restaurant E", loc: [71.798, -41.309] },
+    { id: 3, name: "Restaurant H", loc: [71.98, -42.26] },
   ]);
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
