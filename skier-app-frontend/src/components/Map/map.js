@@ -87,6 +87,7 @@ const Map = () => {
   const findUserLocation = () => {
     setLocateUser(true);
   };
+
   return (
     <div className="h-screen">
       <MapContainer
