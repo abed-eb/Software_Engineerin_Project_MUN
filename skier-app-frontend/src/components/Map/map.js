@@ -9,7 +9,7 @@ import {
 import Control from "react-leaflet-custom-control";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
-import { iconFlag, iconToilet } from "./icon";
+import { iconEnd, iconFlag, iconStart, iconToilet } from "./icon";
 import axios from "axios";
 
 const Map = () => {
@@ -21,9 +21,9 @@ const Map = () => {
     { id: 3, name: "C", loc: [71.7, -42] },
     { id: 4, name: "D", loc: [71.9, -41] },
     { id: 5, name: "E", loc: [71.8, -41.3] },
-    { id: 5, name: "F", loc: [71.1, -39.5] },
-    { id: 5, name: "G", loc: [71.146, -40.124] },
-    { id: 5, name: "H", loc: [71.975, -42.23] },
+    { id: 6, name: "F", loc: [71.1, -39.5] },
+    { id: 7, name: "G", loc: [71.146, -40.124] },
+    { id: 8, name: "H", loc: [71.975, -42.23] },
   ]);
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
@@ -98,7 +98,13 @@ const Map = () => {
               eventHandlers={{
                 click: (e) => selectMarker(marker.id),
               }}
-              icon={iconFlag}
+              icon={
+                start && marker.id === start[0].id
+                  ? iconStart
+                  : end && marker.id === end[0].id
+                  ? iconEnd
+                  : iconFlag
+              }
               position={marker.loc}
             >
               <Popup>{marker.name}</Popup>

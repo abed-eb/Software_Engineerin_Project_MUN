@@ -2,6 +2,8 @@ import L from "leaflet";
 import flag from "../../Assets/flag.png";
 import marker from "../../Assets/location.png";
 import tiolet from "../../Assets/toilet.png";
+import end from "../../Assets/end.png";
+import start from "../../Assets/start.png";
 import "./marker.css";
 var iconBlue = new L.Icon({
   shadowUrl: null,
@@ -35,3 +37,25 @@ var iconToilet = new L.Icon({
 });
 
 export { iconToilet };
+
+var iconStart = new L.Icon({
+  shadowUrl: null,
+  iconAnchor: new L.Point(10, 10),
+  iconSize: new L.Point(70, 70),
+  iconUrl: start,
+  //iconSize: new L.Point(100, 57),
+  // className: 'leaflet-div-icon'
+});
+
+export { iconStart };
+
+var iconEnd = new L.Icon({
+  shadowUrl: null,
+  iconAnchor: new L.Point(10, 10),
+  iconSize: new L.Point(70, 70),
+  iconUrl: end,
+  //iconSize: new L.Point(100, 57),
+  // className: 'leaflet-div-icon'
+});
+
+export { iconEnd };
