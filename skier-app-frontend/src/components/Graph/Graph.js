@@ -17,6 +17,10 @@ const Graph = () => {
     { id: 2, value: "Red" },
     { id: 2, value: "Black" },
   ];
+
+  useEffect(() => {
+    getShortestPath();
+  }, []);
   const [nodes, setNodes] = useState([
     { x: 200, y: 200, text: "A", textx: 170, texty: 180, fill: "green" },
     { x: 300, y: 300, text: "B", textx: 270, texty: 290, fill: "green" },
@@ -130,6 +134,21 @@ const Graph = () => {
       setEnd(null);
       setStart(nodes.filter((c) => c.text === name));
     }
+  };
+
+  const getShortestPath = async () => {
+    axios
+      .post("//localhost:4000/api/v1/shortest-path", {
+        startPoint: "A",
+        endPoint: "C",
+        difficulty: "1",
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
