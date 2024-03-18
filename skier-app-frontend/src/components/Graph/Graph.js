@@ -95,20 +95,17 @@ const Graph = () => {
   ];
 
   useEffect(() => {
+    getGraph();
+  }, []);
+
+  useEffect(() => {
     showPath();
   }, [shortestPath]);
 
   // useEffect(() => {
   //   getShortestPath();
   // }, []);
-  const [nodes, setNodes] = useState([
-    { x: 200, y: 200, text: "A", textx: 170, texty: 180, fill: "green" },
-    { x: 300, y: 300, text: "B", textx: 270, texty: 290, fill: "green" },
-    { x: 500, y: 430, text: "C", textx: 510, texty: 420, fill: "green" },
-    { x: 250, y: 612, text: "D", textx: 255, texty: 617, fill: "green" },
-    { x: 430, y: 618, text: "E", textx: 440, texty: 625, fill: "green" },
-    { x: 534, y: 542, text: "F", textx: 538, texty: 548, fill: "green" },
-  ]);
+  const [nodes, setNodes] = useState([]);
 
   const [edges, setEdges] = useState([
     {
@@ -247,6 +244,52 @@ const Graph = () => {
     else console.log("Data is not selected");
   };
 
+  const getGraph = async () => {
+    axios
+      .get("http://localhost:4000/api/v1/node/nodes")
+      .then((res) => {
+        let points = res.data.nodes;
+        let lines = res.data.edges;
+        for (let i = 0; i < points.length; i++) {
+          const point = points[i];
+          let p = {
+            x: point.x,
+            y: point.y,
+            text: point.text,
+            textx: point.x - 20,
+            texty: point.y - 30,
+            fill: "green",
+          };
+          points[i] = p;
+        }
+        setNodes(points);
+        for (let j = 0; j < lines.length; j++) {
+          const edge = lines[j];
+          let start = points.filter((p) => {
+            return p.text === edge.start;
+          });
+          let end = points.filter((p) => {
+            return p.text === edge.end;
+          });
+          let e = {
+            startName: edge.start,
+            startx: start[0].x,
+            starty: start[0].y,
+            endName: edge.end,
+            endx: end[0].x,
+            endy: end[0].y,
+            weight: edge.weight,
+            fill: "blue",
+          };
+          lines[j] = e;
+        }
+        setEdges(lines);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div>
       <div className="m-2 grid lg:grid-cols-6 md:grid-cols-2 grid-cols-1 gap-4 d-flex items-center content-center">
@@ -285,7 +328,7 @@ const Graph = () => {
                   y={circle.texty + 20}
                   text={circle.text}
                   fontSize={15}
-                  fill="white"
+                  fill="black"
                 />
                 <Image
                   onClick={() => selectStation(circle.text)}

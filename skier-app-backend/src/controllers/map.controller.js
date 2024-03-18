@@ -43,7 +43,7 @@ const getShortestPath = async (req, res) => {
 
   console.log(adjacencyList);
 
-  processNode();
+  // processNode();
   const { distances, reconstructPath } = dijkstra(adjacencyList, startPoint);
 
   let shortestPath = reconstructPath(endPoint);
