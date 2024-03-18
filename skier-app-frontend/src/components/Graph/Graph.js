@@ -119,7 +119,7 @@ const Graph = () => {
       endx: 300,
       endy: 300,
       weight: 10,
-      fill: "white",
+      fill: "blue",
     },
     {
       startName: "A",
@@ -129,7 +129,7 @@ const Graph = () => {
       endx: 250,
       endy: 612,
       weight: 5,
-      fill: "white",
+      fill: "blue",
     },
     {
       startName: "B",
@@ -139,7 +139,7 @@ const Graph = () => {
       endx: 500,
       endy: 430,
       weight: 10,
-      fill: "white",
+      fill: "blue",
     },
     {
       startName: "C",
@@ -149,7 +149,7 @@ const Graph = () => {
       endx: 430,
       endy: 618,
       weight: 1,
-      fill: "white",
+      fill: "blue",
     },
     {
       startName: "D",
@@ -159,7 +159,7 @@ const Graph = () => {
       endx: 300,
       endy: 300,
       weight: 5,
-      fill: "white",
+      fill: "blue",
     },
     {
       startName: "D",
@@ -169,7 +169,7 @@ const Graph = () => {
       endx: 430,
       endy: 618,
       weight: 3,
-      fill: "white",
+      fill: "blue",
     },
     {
       startName: "E",
@@ -179,7 +179,7 @@ const Graph = () => {
       endx: 534,
       endy: 542,
       weight: 4,
-      fill: "white",
+      fill: "blue",
     },
   ]);
 
