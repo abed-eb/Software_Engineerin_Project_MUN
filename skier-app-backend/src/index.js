@@ -7,6 +7,7 @@ app.use(cors());
 
 const mapRoute = require("./routes/map.routes");
 const locationRoute = require("./routes/location.routes");
+const nodeRoute = require("./routes/node.routes");
 
 const db = require("./config/db");
 db();
@@ -16,6 +17,7 @@ app.use(express.json());
 //Use Routes
 app.use("/api/v1/", mapRoute);
 app.use("/api/v1/location", locationRoute);
+app.use("/api/v1/node", nodeRoute);
 
 app.get("/", (req, res) => {
   res.json("Server is running successfully!");
