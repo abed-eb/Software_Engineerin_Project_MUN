@@ -6,6 +6,78 @@ import startFlag from "../../Assets/start.png";
 import endFlag from "../../Assets/end.png";
 import useImage from "use-image";
 import axios from "axios";
+const initial_edges = [
+  {
+    startName: "A",
+    startx: 200,
+    starty: 200,
+    endName: "B",
+    endx: 300,
+    endy: 300,
+    weight: 10,
+    fill: "white",
+  },
+  {
+    startName: "A",
+    startx: 200,
+    starty: 200,
+    endName: "D",
+    endx: 250,
+    endy: 612,
+    weight: 5,
+    fill: "white",
+  },
+  {
+    startName: "B",
+    startx: 300,
+    starty: 300,
+    endName: "C",
+    endx: 500,
+    endy: 430,
+    weight: 10,
+    fill: "white",
+  },
+  {
+    startName: "C",
+    startx: 500,
+    starty: 430,
+    endName: "E",
+    endx: 430,
+    endy: 618,
+    weight: 1,
+    fill: "white",
+  },
+  {
+    startName: "D",
+    startx: 250,
+    starty: 612,
+    endName: "B",
+    endx: 300,
+    endy: 300,
+    weight: 5,
+    fill: "white",
+  },
+  {
+    startName: "D",
+    startx: 250,
+    starty: 612,
+    endName: "E",
+    endx: 430,
+    endy: 618,
+    weight: 3,
+    fill: "white",
+  },
+  {
+    startName: "E",
+    startx: 430,
+    starty: 618,
+    endName: "F",
+    endx: 534,
+    endy: 542,
+    weight: 4,
+    fill: "white",
+  },
+];
 const Graph = () => {
   const [flagIcon] = useImage(flag);
   const [startFlagIcon] = useImage(startFlag);
@@ -13,6 +85,9 @@ const Graph = () => {
   // const [iconSrc, SetIconSrc] = useState(image);
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
+  const [shortestPath, setShortestPath] = useState([]);
+
+  const [difficulty, setDifficulty] = useState("Blue");
   const difficultyOptions = [
     { id: 0, value: "Blue" },
     { id: 2, value: "Red" },
@@ -20,8 +95,12 @@ const Graph = () => {
   ];
 
   useEffect(() => {
-    getShortestPath();
-  }, []);
+    showPath();
+  }, [shortestPath]);
+
+  // useEffect(() => {
+  //   getShortestPath();
+  // }, []);
   const [nodes, setNodes] = useState([
     { x: 200, y: 200, text: "A", textx: 170, texty: 180, fill: "green" },
     { x: 300, y: 300, text: "B", textx: 270, texty: 290, fill: "green" },
@@ -105,22 +184,28 @@ const Graph = () => {
   ]);
 
   const showPath = () => {
-    let path = [
-      ["A", "B", 10],
-      ["B", "C", 10],
-    ];
     let edgesCopy = [...edges];
+    let shortestPathCopy = [...shortestPath];
+    // for (let i = 0; i < edgesCopy.length; i++) {
+    //   const edge = edgesCopy[i];
+    //   for (let j = 0; j < path.length; j++) {
+    //     const p = path[j];
+    //     if (
+    //       p[0] == edge.startName &&
+    //       p[1] == edge.endName &&
+    //       p[2] == edge.weight
+    //     ) {
+    //       edgesCopy[i].fill = "red";
+    //     }
+    //   }
+    // }
     for (let i = 0; i < edgesCopy.length; i++) {
       const edge = edgesCopy[i];
-      for (let j = 0; j < path.length; j++) {
-        const p = path[j];
-        if (
-          p[0] == edge.startName &&
-          p[1] == edge.endName &&
-          p[2] == edge.weight
-        ) {
-          edgesCopy[i].fill = "red";
-        }
+      if (
+        shortestPathCopy.includes(edge.startName) &&
+        shortestPathCopy.includes(edge.endName)
+      ) {
+        edgesCopy[i].fill = "red";
       }
     }
     setEdges(edgesCopy);
@@ -133,23 +218,33 @@ const Graph = () => {
     else if (end === null) setEnd(nodes.filter((n) => n.text === name));
     else {
       setEnd(null);
+      setEdges(initial_edges);
       setStart(nodes.filter((c) => c.text === name));
     }
   };
 
+  const handleChange = (e) => {
+    console.log(e.target.value);
+    setDifficulty(e.target.value);
+  };
+
   const getShortestPath = async () => {
-    axios
-      .post("//localhost:4000/api/v1/shortest-path", {
-        startPoint: "A",
-        endPoint: "C",
-        difficulty: "1",
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (start && end && difficulty)
+      axios
+        .post("//localhost:4000/api/v1/shortest-path", {
+          startPoint: start[0].text,
+          endPoint: end[0].text,
+          difficulty: difficulty,
+        })
+        .then((res) => {
+          console.log(res.data);
+          setShortestPath(res.data.shortestPath);
+          // showPath(res.data.shortestPath);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    else console.log("Data is not selected");
   };
 
   return (
@@ -163,6 +258,7 @@ const Graph = () => {
             Select Difficulty Level
           </label>
           <select
+            onChange={(e) => handleChange(e)}
             id="difficulties"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
@@ -173,7 +269,7 @@ const Graph = () => {
         </div>
         <button
           className=" bg-blue-500 hover:bg-blue-700 text-white font-bold border border-blue-700 rounded p-5 md:mt-6"
-          onClick={showPath}
+          onClick={getShortestPath}
         >
           show path
         </button>
