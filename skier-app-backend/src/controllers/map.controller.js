@@ -1,6 +1,8 @@
 const Restroom = require("../models/restroom.model");
 const Station = require("../models/station.model");
 const Restaurant = require("../models/restaurant.model");
+const Node = require("../models/node.model");
+const Edge = require("../models/edge.model");
 
 // Get all coordinate
 const getCoordinates = async (req, res) => {
@@ -23,42 +25,25 @@ const getShortestPath = async (req, res) => {
       error: "Please provide both startpoint and endpoint",
     });
 
-  const stations = await Station.find({}).select("-__v");
+  const nodes = await Node.find({}, "-_id -__v");
+  const edges = await Edge.find({}, "-_id -__v");
 
-  // Convert locations array to adjacency list with weights
-  // const graph = {};
-  // stations.forEach((location1, index1) => {
-  //   const nodeName1 = location1.name;
-  //   graph[nodeName1] = [];
-  //   stations.slice(index1 + 1).forEach((location2) => {
-  //     const nodeName2 = location2.name;
-  //     const distance = calculateDistance(location1.loc, location2.loc);
-  //     graph[nodeName1].push({ node: nodeName2, weight: distance });
-  //     graph[nodeName2] = graph[nodeName2] || [];
-  //     graph[nodeName2].push({ node: nodeName1, weight: distance });
-  //   });
-  // });
+  // Construct adjacency list
+  const adjacencyList = {};
 
-  // console.log(graph);
+  // Iterate over nodes and initialize empty adjacency lists
+  nodes.forEach((node) => {
+    adjacencyList[node.text] = [];
+  });
 
-  const adjacencyList = {
-    A: [
-      { node: "B", weight: 10 },
-      { node: "D", weight: 5 },
-    ],
-    B: [{ node: "C", weight: 10 }],
-    C: [{ node: "E", weight: 1 }],
-    D: [
-      { node: "B", weight: 5 },
-      { node: "E", weight: 3 },
-    ],
-    E: [
-      { node: "C", weight: 1 },
-      { node: "F", weight: 4 },
-    ],
-    F: [],
-  };
+  // Populate adjacency lists with edges
+  edges.forEach((edge) => {
+    adjacencyList[edge.start].push({ node: edge.end, weight: edge.weight });
+  });
 
+  console.log(adjacencyList);
+
+  processNode();
   const { distances, reconstructPath } = dijkstra(adjacencyList, startPoint);
 
   let shortestPath = reconstructPath(endPoint);
@@ -67,24 +52,6 @@ const getShortestPath = async (req, res) => {
 
   return res.json({ status: "ok", shortestPath });
 };
-
-// function calculateDistance(loc1, loc2) {
-//   const [lat1, lon1] = loc1;
-//   const [lat2, lon2] = loc2;
-//   const R = 6371e3; // Radius of the Earth in meters
-//   const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
-//   const φ2 = (lat2 * Math.PI) / 180;
-//   const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-//   const Δλ = ((lon2 - lon1) * Math.PI) / 180;
-
-//   const a =
-//     Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-//     Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-//   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-//   const distance = R * c; // Distance in meters
-//   return distance;
-// }
 
 const dijkstra = (graph, startNode) => {
   const distances = {};
