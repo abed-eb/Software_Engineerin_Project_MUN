@@ -77,7 +77,7 @@ const Graph = () => {
             shortestPathCopy[j + 1] === edge.endName
           ) {
             console.log(edgesCopy[i].fill);
-            edgesCopy[i].strokeWidth = 10;
+            edgesCopy[i].strokeWidth = 8;
           }
         }
       }
@@ -210,7 +210,7 @@ const Graph = () => {
               <div>
                 <Text
                   x={circle.textx - 10}
-                  y={circle.texty + 20}
+                  y={circle.texty * 1.1}
                   text={circle.text}
                   fontSize={15}
                   fill="black"
