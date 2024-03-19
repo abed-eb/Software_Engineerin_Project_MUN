@@ -1,5 +1,6 @@
 const Node = require("../models/node.model");
 const Edge = require("../models/edge.model");
+const ProcessedEdge = require("../models/pedge.model");
 
 // Get all Nodes
 const getAllNodes = async (req, res) => {
@@ -42,4 +43,27 @@ const createEdge = () => {
     .catch((err) => console.error("Error saving edges data:", err));
 };
 
-module.exports = { getAllNodes, createEdge };
+const createProcessedEdge = () => {
+  // Define and save edges data
+  const edgesData = [
+    { start: "A", end: "B", weight: 10 }, // A to B
+    { start: "A", end: "D", weight: 5 }, // A to D
+    { start: "B", end: "A", weight: 10 }, // B to A
+    { start: "B", end: "C", weight: 10 }, // B to C
+    { start: "B", end: "D", weight: 5 }, // B to D
+    { start: "C", end: "B", weight: 10 }, // C to B
+    { start: "C", end: "E", weight: 1 }, // C to E
+    { start: "D", end: "A", weight: 5 }, // D to A
+    { start: "D", end: "B", weight: 5 }, // D to B
+    { start: "D", end: "E", weight: 3 }, // D to E
+    { start: "E", end: "D", weight: 3 }, // E to D
+    { start: "E", end: "C", weight: 1 }, // E to C
+    { start: "E", end: "F", weight: 4 }, // E to F
+  ];
+
+  ProcessedEdge.insertMany(edgesData)
+    .then((edges) => console.log("Edges data saved successfully"))
+    .catch((err) => console.error("Error saving pedges data:", err));
+};
+
+module.exports = { getAllNodes, createEdge, createProcessedEdge };

@@ -2,7 +2,7 @@ const Restroom = require("../models/restroom.model");
 const Station = require("../models/station.model");
 const Restaurant = require("../models/restaurant.model");
 const Node = require("../models/node.model");
-const Edge = require("../models/edge.model");
+const ProcessedEdge = require("../models/pedge.model");
 
 // Get all coordinate
 const getCoordinates = async (req, res) => {
@@ -26,7 +26,7 @@ const getShortestPath = async (req, res) => {
     });
 
   const nodes = await Node.find({}, "-_id -__v");
-  const edges = await Edge.find({}, "-_id -__v");
+  const edges = await ProcessedEdge.find({}, "-_id -__v");
 
   // Construct adjacency list
   const adjacencyList = {};
