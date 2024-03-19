@@ -56,31 +56,43 @@ const getShortestPath = async (req, res) => {
 const dijkstra = (graph, startNode) => {
   const distances = {};
   const previous = {};
-  const unvisited = [];
+  const unvisited = {};
 
   // Initialize distances and previous nodes
   for (const node in graph) {
     distances[node] = Infinity;
     previous[node] = null;
-    unvisited.push(node);
+    unvisited[node] = true;
   }
   distances[startNode] = 0;
 
   // Dijkstra's algorithm
-  while (unvisited.length > 0) {
-    // Sort unvisited nodes by distance
-    unvisited.sort((a, b) => distances[a] - distances[b]);
-    const currentNode = unvisited.shift();
+  while (Object.keys(unvisited).length > 0) {
+    let minDistanceNode = null;
+    let minDistance = Infinity;
+
+    // Find the node with the minimum distance among unvisited nodes
+    for (const node in unvisited) {
+      if (distances[node] < minDistance) {
+        minDistance = distances[node];
+        minDistanceNode = node;
+      }
+    }
+
+    // Remove the node with the minimum distance from unvisited
+    delete unvisited[minDistanceNode];
 
     // Loop through neighbors of the current node
-    for (const neighbor of graph[currentNode]) {
+    for (const neighbor of graph[minDistanceNode]) {
       const { node, weight } = neighbor;
-      const currentDistance = distances[currentNode] + weight;
+      if (node in unvisited) {
+        const currentDistance = distances[minDistanceNode] + weight;
 
-      // If the distance to the neighbor is shorter
-      if (currentDistance < distances[node]) {
-        distances[node] = currentDistance;
-        previous[node] = currentNode;
+        // If the distance to the neighbor is shorter
+        if (currentDistance < distances[node]) {
+          distances[node] = currentDistance;
+          previous[node] = minDistanceNode;
+        }
       }
     }
   }
