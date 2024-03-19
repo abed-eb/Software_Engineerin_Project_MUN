@@ -165,8 +165,8 @@ const Graph = () => {
         endx: end[0].x,
         endy: end[0].y,
         weight: edge.weight,
-        fill: "rgba(255,0,0,0)",
-        // fill: "white",
+        // fill: "rgba(255,0,0,0)",
+        fill: "Blue",
       };
       lines[j] = e;
     }
