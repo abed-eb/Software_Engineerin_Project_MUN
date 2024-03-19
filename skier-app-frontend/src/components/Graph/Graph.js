@@ -6,78 +6,6 @@ import startFlag from "../../Assets/start.png";
 import endFlag from "../../Assets/end.png";
 import useImage from "use-image";
 import axios from "axios";
-const initial_edges = [
-  {
-    startName: "A",
-    startx: 200,
-    starty: 200,
-    endName: "B",
-    endx: 300,
-    endy: 300,
-    weight: 10,
-    fill: "white",
-  },
-  {
-    startName: "A",
-    startx: 200,
-    starty: 200,
-    endName: "D",
-    endx: 250,
-    endy: 612,
-    weight: 5,
-    fill: "white",
-  },
-  {
-    startName: "B",
-    startx: 300,
-    starty: 300,
-    endName: "C",
-    endx: 500,
-    endy: 430,
-    weight: 10,
-    fill: "white",
-  },
-  {
-    startName: "C",
-    startx: 500,
-    starty: 430,
-    endName: "E",
-    endx: 430,
-    endy: 618,
-    weight: 1,
-    fill: "white",
-  },
-  {
-    startName: "D",
-    startx: 250,
-    starty: 612,
-    endName: "B",
-    endx: 300,
-    endy: 300,
-    weight: 5,
-    fill: "white",
-  },
-  {
-    startName: "D",
-    startx: 250,
-    starty: 612,
-    endName: "E",
-    endx: 430,
-    endy: 618,
-    weight: 3,
-    fill: "white",
-  },
-  {
-    startName: "E",
-    startx: 430,
-    starty: 618,
-    endName: "F",
-    endx: 534,
-    endy: 542,
-    weight: 4,
-    fill: "white",
-  },
-];
 const Graph = () => {
   const [flagIcon] = useImage(flag);
   const [startFlagIcon] = useImage(startFlag);
@@ -86,13 +14,17 @@ const Graph = () => {
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
   const [shortestPath, setShortestPath] = useState([]);
-
+  const [initialEdges, setInitialEdges] = useState([]);
   const [difficulty, setDifficulty] = useState("Blue");
   const difficultyOptions = [
     { id: 0, value: "Blue" },
     { id: 2, value: "Red" },
     { id: 2, value: "Black" },
   ];
+  const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
+  const [rawPoints, setRawPoints] = useState([]);
+  const [rawLines, setRawLines] = useState([]);
 
   useEffect(() => {
     getGraph();
@@ -102,126 +34,44 @@ const Graph = () => {
     showPath();
   }, [shortestPath]);
 
+  useEffect(() => {
+    setData();
+  }, [rawLines, rawPoints]);
+
   // useEffect(() => {
   //   getShortestPath();
   // }, []);
-  const [nodes, setNodes] = useState([]);
-
-  const [edges, setEdges] = useState([
-    {
-      startName: "A",
-      startx: 200,
-      starty: 200,
-      endName: "B",
-      endx: 300,
-      endy: 300,
-      weight: 10,
-      fill: "blue",
-    },
-    {
-      startName: "A",
-      startx: 200,
-      starty: 200,
-      endName: "D",
-      endx: 250,
-      endy: 612,
-      weight: 5,
-      fill: "blue",
-    },
-    {
-      startName: "B",
-      startx: 300,
-      starty: 300,
-      endName: "C",
-      endx: 500,
-      endy: 430,
-      weight: 10,
-      fill: "blue",
-    },
-    {
-      startName: "C",
-      startx: 500,
-      starty: 430,
-      endName: "E",
-      endx: 430,
-      endy: 618,
-      weight: 1,
-      fill: "blue",
-    },
-    {
-      startName: "D",
-      startx: 250,
-      starty: 612,
-      endName: "B",
-      endx: 300,
-      endy: 300,
-      weight: 5,
-      fill: "blue",
-    },
-    {
-      startName: "D",
-      startx: 250,
-      starty: 612,
-      endName: "E",
-      endx: 430,
-      endy: 618,
-      weight: 3,
-      fill: "blue",
-    },
-    {
-      startName: "E",
-      startx: 430,
-      starty: 618,
-      endName: "F",
-      endx: 534,
-      endy: 542,
-      weight: 4,
-      fill: "blue",
-    },
-  ]);
 
   const showPath = () => {
-    let edgesCopy = [...edges];
-    let shortestPathCopy = [...shortestPath];
-    // for (let i = 0; i < edgesCopy.length; i++) {
-    //   const edge = edgesCopy[i];
-    //   for (let j = 0; j < path.length; j++) {
-    //     const p = path[j];
-    //     if (
-    //       p[0] == edge.startName &&
-    //       p[1] == edge.endName &&
-    //       p[2] == edge.weight
-    //     ) {
-    //       edgesCopy[i].fill = "red";
-    //     }
-    //   }
-    // }
-    for (let i = 0; i < edgesCopy.length; i++) {
-      const edge = edgesCopy[i];
-      if (
-        shortestPathCopy.includes(edge.startName) &&
-        shortestPathCopy.includes(edge.endName)
-      ) {
-        edgesCopy[i].fill = "red";
+    if (shortestPath.length > 0) {
+      let edgesCopy = [...edges];
+      let shortestPathCopy = [...shortestPath];
+      for (let i = 0; i < edgesCopy.length; i++) {
+        const edge = edgesCopy[i];
+        if (
+          shortestPathCopy.includes(edge.startName) &&
+          shortestPathCopy.includes(edge.endName)
+        ) {
+          edgesCopy[i].fill = "red";
+        }
       }
+      setEdges(edgesCopy);
     }
-    setEdges(edgesCopy);
   };
 
   const selectStation = (name) => {
-    console.log(name);
-    console.log(start);
     if (start === null) setStart(nodes.filter((n) => n.text === name));
     else if (end === null) setEnd(nodes.filter((n) => n.text === name));
     else {
       setEnd(null);
-      setEdges(initial_edges);
+      // setEdges(initialEdges);
+      getGraph();
+      setShortestPath([]);
       setStart(nodes.filter((c) => c.text === name));
     }
   };
 
   const handleChange = (e) => {
-    console.log(e.target.value);
     setDifficulty(e.target.value);
   };
 
@@ -234,14 +84,12 @@ const Graph = () => {
           difficulty: difficulty,
         })
         .then((res) => {
-          console.log(res.data);
           setShortestPath(res.data.shortestPath);
-          // showPath(res.data.shortestPath);
         })
         .catch((err) => {
           console.log(err);
         });
-    else console.log("Data is not selected");
+    else console.log("Please select points");
   };
 
   const getGraph = async () => {
@@ -250,44 +98,52 @@ const Graph = () => {
       .then((res) => {
         let points = res.data.nodes;
         let lines = res.data.edges;
-        for (let i = 0; i < points.length; i++) {
-          const point = points[i];
-          let p = {
-            x: point.x,
-            y: point.y,
-            text: point.text,
-            textx: point.x - 20,
-            texty: point.y - 30,
-            fill: "green",
-          };
-          points[i] = p;
-        }
-        setNodes(points);
-        for (let j = 0; j < lines.length; j++) {
-          const edge = lines[j];
-          let start = points.filter((p) => {
-            return p.text === edge.start;
-          });
-          let end = points.filter((p) => {
-            return p.text === edge.end;
-          });
-          let e = {
-            startName: edge.start,
-            startx: start[0].x,
-            starty: start[0].y,
-            endName: edge.end,
-            endx: end[0].x,
-            endy: end[0].y,
-            weight: edge.weight,
-            fill: "blue",
-          };
-          lines[j] = e;
-        }
-        setEdges(lines);
+        setRawLines(lines);
+        setRawPoints(points);
       })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const setData = () => {
+    let points = [...rawPoints];
+    let lines = [...rawLines];
+    for (let i = 0; i < points.length; i++) {
+      const point = points[i];
+      let p = {
+        x: point.x,
+        y: point.y,
+        text: point.text,
+        textx: point.x - 20,
+        texty: point.y - 30,
+        fill: "green",
+      };
+      points[i] = p;
+    }
+    setNodes(points);
+    for (let j = 0; j < lines.length; j++) {
+      const edge = lines[j];
+      let start = points.filter((p) => {
+        return p.text === edge.start;
+      });
+      let end = points.filter((p) => {
+        return p.text === edge.end;
+      });
+      let e = {
+        startName: edge.start,
+        startx: start[0].x,
+        starty: start[0].y,
+        endName: edge.end,
+        endx: end[0].x,
+        endy: end[0].y,
+        weight: edge.weight,
+        fill: "blue",
+      };
+      lines[j] = e;
+    }
+    setEdges(lines);
+    setInitialEdges(lines);
   };
 
   return (
