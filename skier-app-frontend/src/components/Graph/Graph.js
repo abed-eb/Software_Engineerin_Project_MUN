@@ -38,21 +38,47 @@ const Graph = () => {
     setData();
   }, [rawLines, rawPoints]);
 
+  useEffect(() => {
+    console.log(edges);
+  }, [edges]);
   // useEffect(() => {
   //   getShortestPath();
   // }, []);
 
+  // const showPath = () => {
+  //   if (shortestPath.length > 0) {
+  //     let edgesCopy = [...edges];
+  //     let shortestPathCopy = [...shortestPath];
+  //     for (let i = 0; i < edgesCopy.length; i++) {
+  //       const edge = edgesCopy[i];
+  //       if (
+  //         shortestPathCopy.includes(edge.startName) &&
+  //         shortestPathCopy.includes(edge.endName)
+  //       ) {
+  //         edgesCopy[i].fill = "red";
+  //       }
+  //     }
+  //     setEdges(edgesCopy);
+  //   }
+  // };
   const showPath = () => {
     if (shortestPath.length > 0) {
       let edgesCopy = [...edges];
       let shortestPathCopy = [...shortestPath];
       for (let i = 0; i < edgesCopy.length; i++) {
         const edge = edgesCopy[i];
-        if (
-          shortestPathCopy.includes(edge.startName) &&
-          shortestPathCopy.includes(edge.endName)
-        ) {
-          edgesCopy[i].fill = "red";
+        console.log(edge);
+        for (let j = 0; j < shortestPathCopy.length - 1; j++) {
+          const e = shortestPathCopy[j];
+          console.log("j: " + shortestPathCopy[j]);
+          console.log("j+1: " + shortestPathCopy[j + 1]);
+          if (
+            shortestPathCopy[j] === edge.startName &&
+            shortestPathCopy[j + 1] === edge.endName
+          ) {
+            console.log(edgesCopy[i].fill);
+            edgesCopy[i].fill = "red";
+          }
         }
       }
       setEdges(edgesCopy);
@@ -96,6 +122,7 @@ const Graph = () => {
     axios
       .get("http://localhost:4000/api/v1/node/nodes")
       .then((res) => {
+        console.log(res.data);
         let points = res.data.nodes;
         let lines = res.data.edges;
         setRawLines(lines);
@@ -138,7 +165,8 @@ const Graph = () => {
         endx: end[0].x,
         endy: end[0].y,
         weight: edge.weight,
-        fill: "blue",
+        fill: "rgba(255,0,0,0)",
+        // fill: "white",
       };
       lines[j] = e;
     }
@@ -221,6 +249,7 @@ const Graph = () => {
                   fontSize={15}
                   fill="#56cfff"
                 />
+                {console.log(edge.startName, edge.endName, edge.fill)}
                 <Line
                   points={[edge.startx, edge.starty, edge.endx, edge.endy]}
                   stroke={edge.fill}
