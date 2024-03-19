@@ -77,7 +77,7 @@ const Graph = () => {
             shortestPathCopy[j + 1] === edge.endName
           ) {
             console.log(edgesCopy[i].fill);
-            edgesCopy[i].strokeWidths = 10;
+            edgesCopy[i].strokeWidth = 10;
           }
         }
       }
@@ -167,7 +167,7 @@ const Graph = () => {
         weight: edge.weight,
         // fill: "rgba(255,0,0,0)",
         fill: "Blue",
-        strokeWidths: 1,
+        strokeWidth: 1,
       };
       lines[j] = e;
     }
@@ -254,7 +254,7 @@ const Graph = () => {
                 <Line
                   points={[edge.startx, edge.starty, edge.endx, edge.endy]}
                   stroke={edge.fill}
-                  strokeWidths={edge.strokeWidths}
+                  strokeWidth={edge.strokeWidth}
                 />
               </div>
             );
