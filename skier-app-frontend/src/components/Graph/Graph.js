@@ -15,11 +15,18 @@ const Graph = () => {
   const [end, setEnd] = useState(null);
   const [shortestPath, setShortestPath] = useState([]);
   const [initialEdges, setInitialEdges] = useState([]);
+  const [pathTpye, setPathType] = useState([]);
   const [difficulty, setDifficulty] = useState("Blue");
   const difficultyOptions = [
     { id: 0, value: "Blue" },
     { id: 2, value: "Red" },
     { id: 2, value: "Black" },
+  ];
+  const typeOptions = [
+    { id: 0, value: "Easiest" },
+    { id: 2, value: "Shortest" },
+    { id: 2, value: "Most Scenic" },
+    { id: 4, value: "Most Difficult" },
   ];
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
@@ -97,10 +104,13 @@ const Graph = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleDifficultyChange = (e) => {
     setDifficulty(e.target.value);
   };
 
+  const handleTypeChange = (e) => {
+    setPathType(e.target.value);
+  };
   const getShortestPath = async () => {
     if (start && end && difficulty)
       axios
@@ -181,17 +191,36 @@ const Graph = () => {
         <div>
           <label
             htmlFor="difficulties"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="block mb-2 text-sm font-medium text-gray-900 text black"
           >
             Select Difficulty Level
           </label>
           <select
-            onChange={(e) => handleChange(e)}
+            value={difficulty}
+            onChange={(e) => handleDifficultyChange(e)}
             id="difficulties"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             {difficultyOptions.map((d) => {
               return <option value={d.value}>{d.value}</option>;
+            })}
+          </select>
+        </div>
+        <div>
+          <label
+            htmlFor="difficulties"
+            className="block mb-2 text-sm font-medium text-gray-900 text black"
+          >
+            Select Path Type
+          </label>
+          <select
+            value={pathTpye}
+            onChange={(e) => handleTypeChange(e)}
+            id="difficulties"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            {typeOptions.map((t) => {
+              return <option value={t.value}>{t.value}</option>;
             })}
           </select>
         </div>
