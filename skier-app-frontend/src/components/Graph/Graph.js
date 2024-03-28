@@ -104,7 +104,7 @@ const Graph = () => {
   const getShortestPath = async () => {
     if (start && end && difficulty)
       axios
-        .post("http://localhost:4000/api/v1/shortest-path", {
+        .post("//localhost:4000/api/v1/shortest-path", {
           startPoint: start[0].text,
           endPoint: end[0].text,
           difficulty: difficulty,
