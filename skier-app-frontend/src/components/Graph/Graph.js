@@ -88,20 +88,30 @@ const Graph = () => {
   }, [rawLines, rawPoints]);
 
   const showPath = () => {
+    console.log(shortestPath);
     if (shortestPath.length > 0) {
       let edgesCopy = [...edges];
       let shortestPathCopy = [...shortestPath];
       for (let i = 0; i < edgesCopy.length; i++) {
         const edge = edgesCopy[i];
-        console.log(edge);
-        for (let j = 0; j < shortestPathCopy.length - 1; j++) {
+        for (let j = 0; j < shortestPathCopy.length; j++) {
           const e = shortestPathCopy[j];
-          console.log("j: " + shortestPathCopy[j]);
-          console.log("j+1: " + shortestPathCopy[j + 1]);
+          console.log("shortest: ", e);
+          console.log("edge: ", edge);
           if (
-            shortestPathCopy[j] === edge.startName &&
-            shortestPathCopy[j + 1] === edge.endName
+            e.start === edge.startName &&
+            e.end === edge.endName &&
+            e.name === edge.name
           ) {
+            console.log("found");
+            console.log(edgesCopy[i].fill);
+            edgesCopy[i].strokeWidth = 8;
+          } else if (
+            e.end === edge.startName &&
+            e.start === edge.endName &&
+            e.name === edge.name
+          ) {
+            console.log("found");
             console.log(edgesCopy[i].fill);
             edgesCopy[i].strokeWidth = 8;
           }
@@ -140,6 +150,7 @@ const Graph = () => {
           criteria: "fastest",
         })
         .then((res) => {
+          console.log(res.data);
           setShortestPath(res.data.shortestPath);
         })
         .catch((err) => {
@@ -199,6 +210,7 @@ const Graph = () => {
         midy: (start[0]?.y + end[0]?.y) / 2,
         fill: edge.color,
         strokeWidth: 1,
+        name: edge.name,
       };
       lines[j] = e;
     }
