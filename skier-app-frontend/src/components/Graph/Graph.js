@@ -97,7 +97,7 @@ const Graph = () => {
         for (let j = 0; j < shortestPathCopy.length; j++) {
           const e = shortestPathCopy[j];
           console.log("shortest: ", e);
-          console.log("edge: ", edge);
+          if (edge.startName === "H") console.log("edge: ", edge);
           if (
             e.start === edge.startName &&
             e.end === edge.endName &&
@@ -298,13 +298,13 @@ const Graph = () => {
           {edges.map((edge) => {
             return (
               <>
-                {/* <Text
+                <Text
                   x={(edge.startx + edge.endx) / 2}
                   y={(edge.starty + edge.endy) / 2}
-                  text={edge.weight}
-                  fontSize={15}
+                  text={edge.name.includes("Lift") ? edge.name : ""}
+                  fontSize={8}
                   fill="#56cfff"
-                /> */}
+                />
                 <Line
                   points={
                     edge.fill === "green"

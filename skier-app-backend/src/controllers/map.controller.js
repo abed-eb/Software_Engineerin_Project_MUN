@@ -105,12 +105,34 @@ const shortestPathHelper = (adjacencyList, startNode, targetNode) => {
 
     for (let neighbor of adjacencyList[closestNode]) {
       const totalDistance = distances[closestNode] + neighbor.weight;
-      if (totalDistance < distances[neighbor.node]) {
+      // Modify the condition to check if the node name contains "Lift"
+      if (
+        !neighbor.name.includes("Lift") &&
+        totalDistance < distances[neighbor.node]
+      ) {
         distances[neighbor.node] = totalDistance;
         predecessors[neighbor.node] = {
           node: closestNode,
           name: neighbor.name,
         };
+      }
+    }
+  }
+
+  // If there are no nodes without "Lift", select nodes with "Lift"
+  if (queue.length === 0) {
+    for (let closestNode in adjacencyList) {
+      if (closestNode.includes("Lift")) {
+        for (let neighbor of adjacencyList[closestNode]) {
+          const totalDistance = distances[closestNode] + neighbor.weight;
+          if (totalDistance < distances[neighbor.node]) {
+            distances[neighbor.node] = totalDistance;
+            predecessors[neighbor.node] = {
+              node: closestNode,
+              name: neighbor.name,
+            };
+          }
+        }
       }
     }
   }

@@ -535,7 +535,7 @@ const createProcessedEdge = () => {
       start: "H",
       end: "I",
       weight: 300,
-      name: "Lift  8",
+      name: "Lift 8",
       color: "green",
     }, // H to I
     {
