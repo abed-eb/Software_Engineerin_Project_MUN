@@ -450,14 +450,14 @@ const createProcessedEdge = () => {
     {
       start: "D",
       end: "E",
-      weight: 900,
+      weight: 850,
       name: "Lift",
       color: "green",
     }, // D to E
     {
       start: "E",
       end: "D",
-      weight: 900,
+      weight: 850,
       name: "Lift",
       color: "green",
     }, // E to D
@@ -506,14 +506,14 @@ const createProcessedEdge = () => {
     {
       start: "G",
       end: "H",
-      weight: 600,
+      weight: 550,
       name: "Lift",
       color: "green",
     }, // G to H
     {
       start: "H",
       end: "G",
-      weight: 600,
+      weight: 550,
       name: "Lift",
       color: "green",
     }, // H to G
@@ -702,14 +702,14 @@ const createProcessedEdge = () => {
     {
       start: "M",
       end: "O",
-      weight: 500,
+      weight: 480,
       name: "Lift",
       color: "green",
     }, // M to O
     {
       start: "O",
       end: "M",
-      weight: 500,
+      weight: 480,
       name: "Lift",
       color: "green",
     }, // O to M
