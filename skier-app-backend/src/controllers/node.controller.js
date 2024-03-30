@@ -56,7 +56,7 @@ const createEdge = () => {
       start: "A",
       end: "G",
       weight: 1000,
-      name: "Lift",
+      name: "Lift 1",
       color: "green",
     }, // A to G
     {
@@ -77,7 +77,7 @@ const createEdge = () => {
       start: "B",
       end: "E",
       weight: 1250,
-      name: "Lift",
+      name: "Lift 2",
       color: "green",
     }, // B to E
     {
@@ -98,7 +98,7 @@ const createEdge = () => {
       start: "C",
       end: "G",
       weight: 1340,
-      name: "Lift",
+      name: "Lift 3",
       color: "green",
     }, // C to G
     {
@@ -112,7 +112,7 @@ const createEdge = () => {
       start: "D",
       end: "G",
       weight: 500,
-      name: "Lift",
+      name: "Lift 4",
       color: "green",
     }, // D to G
     {
@@ -126,7 +126,7 @@ const createEdge = () => {
       start: "D",
       end: "E",
       weight: 900,
-      name: "Lift",
+      name: "Lift 5",
       color: "green",
     }, // D to E
     {
@@ -147,14 +147,14 @@ const createEdge = () => {
       start: "E",
       end: "F",
       weight: 750,
-      name: "Lift",
+      name: "Lift 6",
       color: "green",
     }, // E to F
     {
       start: "G",
       end: "H",
       weight: 600,
-      name: "Lift",
+      name: "Lift 7",
       color: "green",
     }, // G to H
     {
@@ -168,7 +168,7 @@ const createEdge = () => {
       start: "H",
       end: "I",
       weight: 300,
-      name: "Lift",
+      name: "Lift 8",
       color: "green",
     }, // H to I
     {
@@ -182,14 +182,14 @@ const createEdge = () => {
       start: "I",
       end: "J",
       weight: 1000,
-      name: "Lift",
+      name: "Lift 9",
       color: "green",
     }, // I to J
     {
       start: "I",
       end: "L",
       weight: 2200,
-      name: "Lift",
+      name: "Lift 10",
       color: "green",
     }, // I to L
     {
@@ -210,7 +210,7 @@ const createEdge = () => {
       start: "I",
       end: "M",
       weight: 260,
-      name: "Lift",
+      name: "Lift 11",
       color: "green",
     }, // I to M
     {
@@ -224,7 +224,7 @@ const createEdge = () => {
       start: "J",
       end: "K",
       weight: 1790,
-      name: "Lift",
+      name: "Lift 12",
       color: "green",
     }, // J to K
     {
@@ -238,7 +238,7 @@ const createEdge = () => {
       start: "K",
       end: "L",
       weight: 1625,
-      name: "Lift",
+      name: "Lift 13",
       color: "green",
     }, // K to L
     {
@@ -252,7 +252,7 @@ const createEdge = () => {
       start: "M",
       end: "O",
       weight: 500,
-      name: "Lift",
+      name: "Lift 14",
       color: "green",
     }, // M to O
     {
@@ -266,7 +266,7 @@ const createEdge = () => {
       start: "O",
       end: "N",
       weight: 800,
-      name: "Lift",
+      name: "Lift 15",
       color: "green",
     }, // O to N
   ];
@@ -311,14 +311,14 @@ const createProcessedEdge = () => {
       start: "A",
       end: "G",
       weight: 1000,
-      name: "Lift",
+      name: "Lift 1",
       color: "green",
     }, // A to G
     {
       start: "G",
       end: "A",
       weight: 1000,
-      name: "Lift",
+      name: "Lift 1",
       color: "green",
     }, // G to A
     {
@@ -353,14 +353,14 @@ const createProcessedEdge = () => {
       start: "B",
       end: "E",
       weight: 1250,
-      name: "Lift",
+      name: "Lift 2",
       color: "green",
     }, // B to E
     {
       start: "E",
       end: "B",
       weight: 1250,
-      name: "Lift",
+      name: "Lift 2",
       color: "green",
     }, // E to B
     {
@@ -395,14 +395,14 @@ const createProcessedEdge = () => {
       start: "C",
       end: "G",
       weight: 1340,
-      name: "Lift",
+      name: "Lift 3",
       color: "green",
     }, // C to G
     {
       start: "G",
       end: "C",
       weight: 1340,
-      name: "Lift",
+      name: "Lift 3",
       color: "green",
     }, // G to C
     {
@@ -423,14 +423,14 @@ const createProcessedEdge = () => {
       start: "D",
       end: "G",
       weight: 500,
-      name: "Lift",
+      name: "Lift 4",
       color: "green",
     }, // D to G
     {
       start: "G",
       end: "D",
       weight: 500,
-      name: "Lift",
+      name: "Lift 4",
       color: "green",
     }, // G to D
     {
@@ -451,14 +451,14 @@ const createProcessedEdge = () => {
       start: "D",
       end: "E",
       weight: 850,
-      name: "Lift",
+      name: "Lift 5",
       color: "green",
     }, // D to E
     {
       start: "E",
       end: "D",
       weight: 850,
-      name: "Lift",
+      name: "Lift 5",
       color: "green",
     }, // E to D
     {
@@ -493,28 +493,28 @@ const createProcessedEdge = () => {
       start: "E",
       end: "F",
       weight: 750,
-      name: "Lift",
+      name: "Lift 6",
       color: "green",
     }, // E to F
     {
       start: "F",
       end: "E",
       weight: 750,
-      name: "Lift",
+      name: "Lift 6",
       color: "green",
     }, // F to E
     {
       start: "G",
       end: "H",
       weight: 550,
-      name: "Lift",
+      name: "Lift 7",
       color: "green",
     }, // G to H
     {
       start: "H",
       end: "G",
       weight: 550,
-      name: "Lift",
+      name: "Lift 7",
       color: "green",
     }, // H to G
     {
@@ -535,14 +535,14 @@ const createProcessedEdge = () => {
       start: "H",
       end: "I",
       weight: 300,
-      name: "Lift",
+      name: "Lift  8",
       color: "green",
     }, // H to I
     {
       start: "I",
       end: "H",
       weight: 300,
-      name: "Lift",
+      name: "Lift 8",
       color: "green",
     }, // I to H
     {
@@ -563,28 +563,28 @@ const createProcessedEdge = () => {
       start: "I",
       end: "J",
       weight: 1000,
-      name: "Lift",
+      name: "Lift 9",
       color: "green",
     }, // I to J
     {
       start: "J",
       end: "I",
       weight: 1000,
-      name: "Lift",
+      name: "Lift 9",
       color: "green",
     }, // J to I
     {
       start: "I",
       end: "L",
       weight: 2200,
-      name: "Lift",
+      name: "Lift 10",
       color: "green",
     }, // I to L
     {
       start: "L",
       end: "I",
       weight: 2200,
-      name: "Lift",
+      name: "Lift 10",
       color: "green",
     }, // L to I
     {
@@ -619,14 +619,14 @@ const createProcessedEdge = () => {
       start: "I",
       end: "M",
       weight: 260,
-      name: "Lift",
+      name: "Lift 11",
       color: "green",
     }, // I to M
     {
       start: "M",
       end: "I",
       weight: 260,
-      name: "Lift",
+      name: "Lift 11",
       color: "green",
     }, // M to I
     {
@@ -647,14 +647,14 @@ const createProcessedEdge = () => {
       start: "J",
       end: "K",
       weight: 1790,
-      name: "Lift",
+      name: "Lift 12",
       color: "green",
     }, // J to K
     {
       start: "K",
       end: "J",
       weight: 1790,
-      name: "Lift",
+      name: "Lift 12",
       color: "green",
     }, // K to J
     {
@@ -675,14 +675,14 @@ const createProcessedEdge = () => {
       start: "K",
       end: "L",
       weight: 1625,
-      name: "Lift",
+      name: "Lift 13",
       color: "green",
     }, // K to L
     {
       start: "L",
       end: "K",
       weight: 1625,
-      name: "Lift",
+      name: "Lift 13",
       color: "green",
     }, // L to K
     {
@@ -703,14 +703,14 @@ const createProcessedEdge = () => {
       start: "M",
       end: "O",
       weight: 480,
-      name: "Lift",
+      name: "Lift 14",
       color: "green",
     }, // M to O
     {
       start: "O",
       end: "M",
       weight: 480,
-      name: "Lift",
+      name: "Lift 14",
       color: "green",
     }, // O to M
     {
@@ -731,14 +731,14 @@ const createProcessedEdge = () => {
       start: "O",
       end: "N",
       weight: 800,
-      name: "Lift",
+      name: "Lift 15",
       color: "green",
     }, // O to N
     {
       start: "N",
       end: "O",
       weight: 800,
-      name: "Lift",
+      name: "Lift 15",
       color: "green",
     }, // N to O
   ];
