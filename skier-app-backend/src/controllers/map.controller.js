@@ -18,7 +18,6 @@ const getCoordinates = async (req, res) => {
 
 const getShortestPath = async (req, res) => {
   const { startPoint, endPoint, difficulty, criteria } = req.body;
-  console.log(criteria);
   if (!startPoint || !endPoint)
     return res.json({
       status: "error",
@@ -72,83 +71,63 @@ const getShortestPath = async (req, res) => {
       });
     });
 
-  console.log(adjacencyList);
-
-  // processNode();
-  const { distances, reconstructPath } = dijkstra(adjacencyList, startPoint);
-
-  let shortestPathInfo = reconstructPath(endPoint);
-
-  // Construct an array containing objects with start, end, and edge name
-  const shortestPath = [];
-  for (let i = 0; i < shortestPathInfo.length - 1; i++) {
-    const startNode = shortestPathInfo[i];
-    const endNode = shortestPathInfo[i + 1];
-    const edge = adjacencyList[startNode].find((edge) => edge.node === endNode);
-    const edgeName = edge ? edge.name : null;
-    shortestPath.push({ start: startNode, end: endNode, name: edgeName });
-  }
-
-  return res.json({ status: "ok", shortestPath });
+  const result = shortestPathHelper(adjacencyList, startPoint, endPoint);
+  return res.json({ status: "ok", result });
 };
 
-const dijkstra = (graph, startNode) => {
+const shortestPathHelper = (adjacencyList, startNode, targetNode) => {
+  // Initialize distances with Infinity and predecessor as null
   const distances = {};
-  const previous = {};
-  const unvisited = {};
-
-  // Initialize distances and previous nodes
-  for (const node in graph) {
-    distances[node] = { distance: Infinity, edgeName: null };
-    previous[node] = null;
-    unvisited[node] = true;
+  const predecessors = {};
+  for (let node in adjacencyList) {
+    distances[node] = Infinity;
+    predecessors[node] = null;
   }
-  distances[startNode].distance = 0;
+  distances[startNode] = 0;
+
+  // Create a priority queue
+  const queue = Object.keys(adjacencyList);
+
+  // Helper function to get the node with the smallest distance
+  function getClosestNode() {
+    return queue.reduce((minNode, node) =>
+      distances[node] < distances[minNode] ? node : minNode
+    );
+  }
 
   // Dijkstra's algorithm
-  while (Object.keys(unvisited).length > 0) {
-    let minDistanceNode = null;
-    let minDistance = Infinity;
-
-    // Find the node with the minimum distance among unvisited nodes
-    for (const node in unvisited) {
-      if (distances[node].distance < minDistance) {
-        minDistance = distances[node].distance;
-        minDistanceNode = node;
-      }
+  while (queue.length > 0) {
+    const closestNode = getClosestNode();
+    if (closestNode === targetNode || distances[closestNode] === Infinity) {
+      break;
     }
+    queue.splice(queue.indexOf(closestNode), 1);
 
-    // Remove the node with the minimum distance from unvisited
-    delete unvisited[minDistanceNode];
-
-    // Loop through neighbors of the current node
-    for (const neighbor of graph[minDistanceNode]) {
-      const { node, weight, name } = neighbor;
-      if (node in unvisited) {
-        const currentDistance = distances[minDistanceNode].distance + weight;
-
-        // If the distance to the neighbor is shorter
-        if (currentDistance < distances[node].distance) {
-          distances[node].distance = currentDistance;
-          distances[node].edgeName = name; // Update the edge name
-          previous[node] = minDistanceNode;
-        }
+    for (let neighbor of adjacencyList[closestNode]) {
+      const totalDistance = distances[closestNode] + neighbor.weight;
+      if (totalDistance < distances[neighbor.node]) {
+        distances[neighbor.node] = totalDistance;
+        predecessors[neighbor.node] = {
+          node: closestNode,
+          name: neighbor.name,
+        };
       }
     }
   }
 
-  // Reconstruct the shortest path
-  const reconstructPath = (endPoint) => {
-    const shortestPath = [];
-    let currentNode = endPoint;
-    while (currentNode !== null) {
-      shortestPath.unshift(currentNode);
-      currentNode = previous[currentNode];
-    }
-    return shortestPath;
-  };
+  // Backtrack to find the shortest path with names
+  const shortestPath = [];
+  let currentNode = targetNode;
+  while (currentNode !== null && predecessors[currentNode] !== null) {
+    shortestPath.unshift({
+      start: predecessors[currentNode].node,
+      end: currentNode,
+      name: predecessors[currentNode].name,
+    });
+    currentNode = predecessors[currentNode].node;
+  }
 
-  return { distances, reconstructPath };
+  return { cost: distances[targetNode], shortestPath };
 };
 
 module.exports = { getCoordinates, getShortestPath };
