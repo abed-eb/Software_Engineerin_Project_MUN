@@ -42,12 +42,17 @@ const getShortestPath = async (req, res) => {
       adjacencyList[edge.start].push({
         node: edge.end,
         weight: edge.weight / 50,
+        name: edge.name, // Include the name of the edge
       });
     });
   // Populate adjacency lists with edges
   else
     edges.forEach((edge) => {
-      adjacencyList[edge.start].push({ node: edge.end, weight: edge.weight });
+      adjacencyList[edge.start].push({
+        node: edge.end,
+        weight: edge.weight,
+        name: edge.name, // Include the name of the edge
+      });
     });
 
   console.log(adjacencyList);
@@ -55,9 +60,17 @@ const getShortestPath = async (req, res) => {
   // processNode();
   const { distances, reconstructPath } = dijkstra(adjacencyList, startPoint);
 
-  let shortestPath = reconstructPath(endPoint);
-  // console.log("Shortest distances:", distances);
-  // console.log(path);
+  let shortestPathInfo = reconstructPath(endPoint);
+
+  // Construct an array containing objects with start, end, and edge name
+  const shortestPath = [];
+  for (let i = 0; i < shortestPathInfo.length - 1; i++) {
+    const startNode = shortestPathInfo[i];
+    const endNode = shortestPathInfo[i + 1];
+    const edge = adjacencyList[startNode].find((edge) => edge.node === endNode);
+    const edgeName = edge ? edge.name : null;
+    shortestPath.push({ start: startNode, end: endNode, name: edgeName });
+  }
 
   return res.json({ status: "ok", shortestPath });
 };
@@ -69,11 +82,11 @@ const dijkstra = (graph, startNode) => {
 
   // Initialize distances and previous nodes
   for (const node in graph) {
-    distances[node] = Infinity;
+    distances[node] = { distance: Infinity, edgeName: null };
     previous[node] = null;
     unvisited[node] = true;
   }
-  distances[startNode] = 0;
+  distances[startNode].distance = 0;
 
   // Dijkstra's algorithm
   while (Object.keys(unvisited).length > 0) {
@@ -82,8 +95,8 @@ const dijkstra = (graph, startNode) => {
 
     // Find the node with the minimum distance among unvisited nodes
     for (const node in unvisited) {
-      if (distances[node] < minDistance) {
-        minDistance = distances[node];
+      if (distances[node].distance < minDistance) {
+        minDistance = distances[node].distance;
         minDistanceNode = node;
       }
     }
@@ -93,13 +106,14 @@ const dijkstra = (graph, startNode) => {
 
     // Loop through neighbors of the current node
     for (const neighbor of graph[minDistanceNode]) {
-      const { node, weight } = neighbor;
+      const { node, weight, name } = neighbor;
       if (node in unvisited) {
-        const currentDistance = distances[minDistanceNode] + weight;
+        const currentDistance = distances[minDistanceNode].distance + weight;
 
         // If the distance to the neighbor is shorter
-        if (currentDistance < distances[node]) {
-          distances[node] = currentDistance;
+        if (currentDistance < distances[node].distance) {
+          distances[node].distance = currentDistance;
+          distances[node].edgeName = name; // Update the edge name
           previous[node] = minDistanceNode;
         }
       }
