@@ -72,7 +72,7 @@ const getShortestPath = async (req, res) => {
     });
 
   const result = shortestPathHelper(adjacencyList, startPoint, endPoint);
-  return res.json({ status: "ok", result });
+  return res.json({ status: "ok", shortestPath: result.shortestPath });
 };
 
 const shortestPathHelper = (adjacencyList, startNode, targetNode) => {
