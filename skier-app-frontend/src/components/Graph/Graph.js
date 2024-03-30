@@ -18,9 +18,10 @@ const Graph = () => {
   const [pathTpye, setPathType] = useState([]);
   const [difficulty, setDifficulty] = useState("Blue");
   const difficultyOptions = [
-    { id: 0, value: "Blue" },
+    { id: 0, value: "All" },
+    { id: 1, value: "Blue" },
     { id: 2, value: "Red" },
-    { id: 2, value: "Black" },
+    { id: 3, value: "Black" },
   ];
   const typeOptions = [
     { id: 0, value: "Easiest" },
@@ -35,6 +36,47 @@ const Graph = () => {
 
   useEffect(() => {
     getGraph();
+    // let nodesCopy = [...nodes];
+    // let edgeCopy = [...edges];
+    // for (let i = 0; i < nodesCopy.length; i++) {
+    //   const point = nodesCopy[i];
+    //   let p = {
+    //     x: point?.x,
+    //     y: point?.y,
+    //     text: point.text,
+    //     textx: point?.x - 20,
+    //     texty: point?.y - 30,
+    //     fill: "green",
+    //   };
+    //   nodesCopy[i] = p;
+    // }
+    // setNodes(nodesCopy);
+    // for (let j = 0; j < edgeCopy.length; j++) {
+    //   const edge = edgeCopy[j];
+    //   let start = nodesCopy.filter((p) => {
+    //     return p.text === edge.start;
+    //   });
+    //   let end = nodesCopy.filter((p) => {
+    //     return p.text === edge.end;
+    //   });
+    //   let e = {
+    //     startName: edge.start,
+    //     startx: start[0]?.x,
+    //     starty: start[0]?.y,
+    //     endName: edge.end,
+    //     endx: end[0]?.x,
+    //     endy: end[0]?.y,
+    //     weight: edge.weight,
+    //     midx: (start[0]?.x + end[0]?.x) / 2,
+    //     midy: (start[0]?.y + end[0]?.y) / 2,
+    //     // fill: "rgba(255,0,0,0)",
+    //     fill: edge.color,
+    //     strokeWidth: 1,
+    //     // tension: 3,
+    //   };
+    //   edgeCopy[j] = e;
+    // }
+    // setEdges(edgeCopy);
   }, []);
 
   useEffect(() => {
@@ -45,29 +87,6 @@ const Graph = () => {
     setData();
   }, [rawLines, rawPoints]);
 
-  useEffect(() => {
-    console.log(edges);
-  }, [edges]);
-  // useEffect(() => {
-  //   getShortestPath();
-  // }, []);
-
-  // const showPath = () => {
-  //   if (shortestPath.length > 0) {
-  //     let edgesCopy = [...edges];
-  //     let shortestPathCopy = [...shortestPath];
-  //     for (let i = 0; i < edgesCopy.length; i++) {
-  //       const edge = edgesCopy[i];
-  //       if (
-  //         shortestPathCopy.includes(edge.startName) &&
-  //         shortestPathCopy.includes(edge.endName)
-  //       ) {
-  //         edgesCopy[i].fill = "red";
-  //       }
-  //     }
-  //     setEdges(edgesCopy);
-  //   }
-  // };
   const showPath = () => {
     if (shortestPath.length > 0) {
       let edgesCopy = [...edges];
@@ -118,6 +137,7 @@ const Graph = () => {
           startPoint: start[0].text,
           endPoint: end[0].text,
           difficulty: difficulty,
+          criteria: "fastest",
         })
         .then((res) => {
           setShortestPath(res.data.shortestPath);
@@ -149,11 +169,11 @@ const Graph = () => {
     for (let i = 0; i < points.length; i++) {
       const point = points[i];
       let p = {
-        x: point.x,
-        y: point.y,
+        x: point?.x,
+        y: point?.y,
         text: point.text,
-        textx: point.x - 20,
-        texty: point.y - 30,
+        textx: point?.x - 20,
+        texty: point?.y - 30,
         fill: "green",
       };
       points[i] = p;
@@ -169,18 +189,20 @@ const Graph = () => {
       });
       let e = {
         startName: edge.start,
-        startx: start[0].x,
-        starty: start[0].y,
+        startx: start[0]?.x,
+        starty: start[0]?.y,
         endName: edge.end,
-        endx: end[0].x,
-        endy: end[0].y,
-        weight: edge.weight,
-        // fill: "rgba(255,0,0,0)",
-        fill: "Blue",
+        endx: end[0]?.x,
+        endy: end[0]?.y,
+        weight: edge?.weight,
+        midx: (start[0]?.x + end[0]?.x) / 2,
+        midy: (start[0]?.y + end[0]?.y) / 2,
+        fill: edge.color,
         strokeWidth: 1,
       };
       lines[j] = e;
     }
+    console.log(lines);
     setEdges(lines);
     setInitialEdges(lines);
   };
@@ -231,80 +253,76 @@ const Graph = () => {
           show path
         </button>
       </div>
-      <Stage width={534 + 50} height={618 + 50}>
-        {/* width={534 + 200} height={618 + 200} */}
+      <Stage width={2000} height={2000}>
         <Layer>
           {nodes.map((circle) => {
             return (
               <div>
                 <Text
-                  x={circle.textx - 10}
-                  y={circle.texty * 1.1}
+                  x={circle?.textx - 10}
+                  y={circle?.texty + 20}
                   text={circle.text}
                   fontSize={15}
                   fill="black"
                 />
                 <Image
                   onClick={() => selectStation(circle.text)}
-                  x={circle.x - 10}
-                  y={circle.y - 20}
+                  x={circle?.x - 10}
+                  y={circle?.y - 20}
                   image={
-                    start && circle.text === start[0].text
+                    start && circle.text === start[0]?.text
                       ? startFlagIcon
-                      : end && circle.text === end[0].text
+                      : end && circle.text === end[0]?.text
                       ? endFlagIcon
                       : flagIcon
                   }
-                  width={50}
-                  height={50}
+                  width={30}
+                  height={30}
                 />
-                {/* <Circle
-                  onClick={() => selectStation(circle.text)}
-                  x={circle.x}
-                  y={circle.y}
-                  radius={10}
-                  fill="green"
-                /> */}
               </div>
             );
           })}
 
           {edges.map((edge) => {
             return (
-              <div>
-                <Text
-                  x={(edge.startx + 18 + edge.endx + 18) / 2}
-                  y={(edge.starty + 5 + edge.endy + 5) / 2}
+              <>
+                {/* <Text
+                  x={(edge.startx + edge.endx) / 2}
+                  y={(edge.starty + edge.endy) / 2}
                   text={edge.weight}
                   fontSize={15}
                   fill="#56cfff"
-                />
-                {console.log(edge.startName, edge.endName, edge.fill)}
+                /> */}
                 <Line
-                  points={[edge.startx, edge.starty, edge.endx, edge.endy]}
+                  points={
+                    edge.fill === "green"
+                      ? [edge.startx, edge.starty, edge.endx, edge.endy]
+                      : edge.fill === "red" || edge.fill === "black"
+                      ? [
+                          edge.startx,
+                          edge.starty,
+                          edge.midx,
+                          edge.starty,
+                          edge.endx,
+                          edge.endy,
+                        ]
+                      : [
+                          edge.startx,
+                          edge.starty,
+                          edge.midx,
+                          edge.endy,
+                          edge.endx,
+                          edge.endy,
+                        ]
+                  }
                   stroke={edge.fill}
                   strokeWidth={edge.strokeWidth}
+                  lineCap="round"
+                  tension={0.5}
                 />
-              </div>
+              </>
             );
           })}
-          {/* <Text x={210} y={100} text="A1" fontSize={15} fill="white" />
-
-        <Circle x={300} y={300} radius={10} fill="green" />
-        <Circle x={500} y={430} radius={10} fill="green" />
-        <Circle x={250} y={612} radius={10} fill="green" /> */}
-          {/* <Line points={[200, 100, 300, 300]} stroke="white" /> */}
-          {/* <Line
-          x={20}
-          y={200}
-          points={[0, 0, 100, 0, 100, 100]}
-          tension={0.5}
-          closed
-          stroke="black"
-          fillLinearGradientStartPoint={{ x: -50, y: -50 }}
-          fillLinearGradientEndPoint={{ x: 50, y: 50 }}
-          fillLinearGradientColorStops={[0, "red", 1, "yellow"]}
-        /> */}
         </Layer>
       </Stage>
     </div>

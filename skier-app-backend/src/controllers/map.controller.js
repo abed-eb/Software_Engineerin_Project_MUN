@@ -17,8 +17,8 @@ const getCoordinates = async (req, res) => {
 };
 
 const getShortestPath = async (req, res) => {
-  const { startPoint, endPoint, difficulty } = req.body;
-
+  const { startPoint, endPoint, difficulty, criteria } = req.body;
+  console.log(criteria);
   if (!startPoint || !endPoint)
     return res.json({
       status: "error",
@@ -36,10 +36,19 @@ const getShortestPath = async (req, res) => {
     adjacencyList[node.text] = [];
   });
 
+  if (criteria === "fastest")
+    // Populate adjacency lists with edges
+    edges.forEach((edge) => {
+      adjacencyList[edge.start].push({
+        node: edge.end,
+        weight: edge.weight / 50,
+      });
+    });
   // Populate adjacency lists with edges
-  edges.forEach((edge) => {
-    adjacencyList[edge.start].push({ node: edge.end, weight: edge.weight });
-  });
+  else
+    edges.forEach((edge) => {
+      adjacencyList[edge.start].push({ node: edge.end, weight: edge.weight });
+    });
 
   console.log(adjacencyList);
 

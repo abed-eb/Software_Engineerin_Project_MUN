@@ -15,12 +15,21 @@ const getAllNodes = async (req, res) => {
 
 const createEdge = () => {
   const NodesData = [
-    { x: 200, y: 200, text: "A" },
-    { x: 300, y: 300, text: "B" },
-    { x: 500, y: 430, text: "C" },
-    { x: 250, y: 612, text: "D" },
-    { x: 430, y: 618, text: "E" },
-    { x: 534, y: 542, text: "F" },
+    { x: 250, y: 612, text: "A" },
+    { x: 200, y: 220, text: "B" },
+    { x: 390, y: 590, text: "C" },
+    { x: 310, y: 350, text: "D" },
+    { x: 330, y: 120, text: "E" },
+    { x: 434, y: 189, text: "F" },
+    { x: 430, y: 325, text: "G" },
+    { x: 690, y: 355, text: "H" },
+    { x: 790, y: 355, text: "I" },
+    { x: 934, y: 375, text: "J" },
+    { x: 1000, y: 475, text: "K" },
+    { x: 1200, y: 90, text: "L" },
+    { x: 890, y: 268, text: "M" },
+    { x: 790, y: 255, text: "O" },
+    { x: 990, y: 180, text: "N" },
   ];
 
   Node.insertMany(NodesData)
@@ -29,13 +38,237 @@ const createEdge = () => {
 
   // Define and save edges data
   const edgesData = [
-    { start: "A", end: "B", weight: 10 }, // A to B
-    { start: "A", end: "D", weight: 5 }, // A to D
-    { start: "B", end: "C", weight: 10 }, // B to C
-    { start: "C", end: "E", weight: 1 }, // C to E
-    { start: "D", end: "B", weight: 5 }, // D to B
-    { start: "D", end: "E", weight: 3 }, // D to E
-    { start: "E", end: "F", weight: 4 }, // E to F
+    {
+      start: "A",
+      end: "G",
+      weight: 2100,
+      name: "20 FIS - Abfahrt",
+      color: "red",
+    }, // A to G
+    {
+      start: "A",
+      end: "G",
+      weight: 1550,
+      name: "21 Eisenhutabfahrt",
+      color: "red",
+    }, // A to G
+    {
+      start: "A",
+      end: "G",
+      weight: 1000,
+      name: "Lift",
+      color: "green",
+    }, // A to G
+    {
+      start: "B",
+      end: "E",
+      weight: 1400,
+      name: "24 Weitentalabfahrt",
+      color: "red",
+    }, // B to E
+    {
+      start: "B",
+      end: "E",
+      weight: 1450,
+      name: "23 Schwarzseeabfahrt",
+      color: "red",
+    }, // B to E
+    {
+      start: "B",
+      end: "E",
+      weight: 1250,
+      name: "Lift",
+      color: "green",
+    }, // B to E
+    {
+      start: "C",
+      end: "G",
+      weight: 1200,
+      name: "19 Zirbenwaldabfahrt",
+      color: "red",
+    }, // C to G
+    {
+      start: "C",
+      end: "G",
+      weight: 1800,
+      name: "18 Märchenwaldabfahrt",
+      color: "blue",
+    }, // C to G
+    {
+      start: "C",
+      end: "G",
+      weight: 1340,
+      name: "Lift",
+      color: "green",
+    }, // C to G
+    {
+      start: "D",
+      end: "G",
+      weight: 650,
+      name: "36 Alibi für Seitensprung",
+      color: "blue",
+    }, // D to G
+    {
+      start: "D",
+      end: "G",
+      weight: 500,
+      name: "Lift",
+      color: "green",
+    }, // D to G
+    {
+      start: "D",
+      end: "E",
+      weight: 900,
+      name: "22 Seitensprung",
+      color: "red",
+    }, // D to E
+    {
+      start: "D",
+      end: "E",
+      weight: 900,
+      name: "Lift",
+      color: "green",
+    }, // D to E
+    {
+      start: "E",
+      end: "F",
+      weight: 830,
+      name: "25 Abfahrt Sonnenbahn",
+      color: "red",
+    }, // E to F
+    {
+      start: "E",
+      end: "F",
+      weight: 880,
+      name: "32 Skiweg zur Sonnenbahn",
+      color: "blue",
+    }, // E to F
+    {
+      start: "E",
+      end: "F",
+      weight: 750,
+      name: "Lift",
+      color: "green",
+    }, // E to F
+    {
+      start: "G",
+      end: "H",
+      weight: 600,
+      name: "Lift",
+      color: "green",
+    }, // G to H
+    {
+      start: "G",
+      end: "H",
+      weight: 600,
+      name: "26 Wildkopfabfahrt",
+      color: "blue",
+    }, // G to H
+    {
+      start: "H",
+      end: "I",
+      weight: 300,
+      name: "Lift",
+      color: "green",
+    }, // H to I
+    {
+      start: "I",
+      end: "J",
+      weight: 1300,
+      name: "3 Pauliabfahrt",
+      color: "red",
+    }, // I to J
+    {
+      start: "I",
+      end: "J",
+      weight: 1000,
+      name: "Lift",
+      color: "green",
+    }, // I to J
+    {
+      start: "I",
+      end: "L",
+      weight: 2200,
+      name: "Lift",
+      color: "green",
+    }, // I to L
+    {
+      start: "I",
+      end: "L",
+      weight: 2350,
+      name: "1 Kornockabfahrt",
+      color: "blue",
+    }, // I to L
+    {
+      start: "I",
+      end: "M",
+      weight: 300,
+      name: "5 Engländerabfahrt",
+      color: "red",
+    }, // I to M
+    {
+      start: "I",
+      end: "M",
+      weight: 260,
+      name: "Lift",
+      color: "green",
+    }, // I to M
+    {
+      start: "J",
+      end: "K",
+      weight: 1970,
+      name: "17 Lampelabfahrt",
+      color: "blue",
+    }, // J to K
+    {
+      start: "J",
+      end: "K",
+      weight: 1790,
+      name: "Lift",
+      color: "green",
+    }, // J to K
+    {
+      start: "K",
+      end: "L",
+      weight: 1500,
+      name: "14 Schafalmabfahrt",
+      color: "black",
+    }, // K to L
+    {
+      start: "K",
+      end: "L",
+      weight: 1625,
+      name: "Lift",
+      color: "green",
+    }, // K to L
+    {
+      start: "M",
+      end: "O",
+      weight: 500,
+      name: "7 Übungswiesenabfahrt rechts",
+      color: "black",
+    }, // M to O
+    {
+      start: "M",
+      end: "O",
+      weight: 500,
+      name: "Lift",
+      color: "green",
+    }, // M to O
+    {
+      start: "O",
+      end: "N",
+      weight: 950,
+      name: "12 Panoramaabfahrt",
+      color: "red",
+    }, // O to N
+    {
+      start: "O",
+      end: "N",
+      weight: 800,
+      name: "Lift",
+      color: "green",
+    }, // O to N
   ];
 
   Edge.insertMany(edgesData)
@@ -46,19 +279,468 @@ const createEdge = () => {
 const createProcessedEdge = () => {
   // Define and save edges data
   const edgesData = [
-    { start: "A", end: "B", weight: 10 }, // A to B
-    { start: "A", end: "D", weight: 5 }, // A to D
-    { start: "B", end: "A", weight: 10 }, // B to A
-    { start: "B", end: "C", weight: 10 }, // B to C
-    { start: "B", end: "D", weight: 5 }, // B to D
-    { start: "C", end: "B", weight: 10 }, // C to B
-    { start: "C", end: "E", weight: 1 }, // C to E
-    { start: "D", end: "A", weight: 5 }, // D to A
-    { start: "D", end: "B", weight: 5 }, // D to B
-    { start: "D", end: "E", weight: 3 }, // D to E
-    { start: "E", end: "D", weight: 3 }, // E to D
-    { start: "E", end: "C", weight: 1 }, // E to C
-    { start: "E", end: "F", weight: 4 }, // E to F
+    {
+      start: "A",
+      end: "G",
+      weight: 2100,
+      name: "20 FIS - Abfahrt",
+      color: "red",
+    }, // A to G
+    {
+      start: "G",
+      end: "A",
+      weight: 2100,
+      name: "20 FIS - Abfahrt",
+      color: "red",
+    }, // G to A
+    {
+      start: "A",
+      end: "G",
+      weight: 1550,
+      name: "21 Eisenhutabfahrt",
+      color: "red",
+    }, // A to G
+    {
+      start: "G",
+      end: "A",
+      weight: 1550,
+      name: "21 Eisenhutabfahrt",
+      color: "red",
+    }, // G to A
+    {
+      start: "A",
+      end: "G",
+      weight: 1000,
+      name: "Lift",
+      color: "green",
+    }, // A to G
+    {
+      start: "G",
+      end: "A",
+      weight: 1000,
+      name: "Lift",
+      color: "green",
+    }, // G to A
+    {
+      start: "B",
+      end: "E",
+      weight: 1400,
+      name: "24 Weitentalabfahrt",
+      color: "red",
+    }, // B to E
+    {
+      start: "E",
+      end: "B",
+      weight: 1400,
+      name: "24 Weitentalabfahrt",
+      color: "red",
+    }, // E to B
+    {
+      start: "B",
+      end: "E",
+      weight: 1450,
+      name: "23 Schwarzseeabfahrt",
+      color: "red",
+    }, // B to E
+    {
+      start: "E",
+      end: "B",
+      weight: 1450,
+      name: "23 Schwarzseeabfahrt",
+      color: "red",
+    }, // E to B
+    {
+      start: "B",
+      end: "E",
+      weight: 1250,
+      name: "Lift",
+      color: "green",
+    }, // B to E
+    {
+      start: "E",
+      end: "B",
+      weight: 1250,
+      name: "Lift",
+      color: "green",
+    }, // E to B
+    {
+      start: "C",
+      end: "G",
+      weight: 1200,
+      name: "19 Zirbenwaldabfahrt",
+      color: "red",
+    }, // C to G
+    {
+      start: "G",
+      end: "C",
+      weight: 1200,
+      name: "19 Zirbenwaldabfahrt",
+      color: "red",
+    }, // G to C
+    {
+      start: "C",
+      end: "G",
+      weight: 1800,
+      name: "18 Märchenwaldabfahrt",
+      color: "blue",
+    }, // C to G
+    {
+      start: "G",
+      end: "C",
+      weight: 1800,
+      name: "18 Märchenwaldabfahrt",
+      color: "blue",
+    }, // G to C
+    {
+      start: "C",
+      end: "G",
+      weight: 1340,
+      name: "Lift",
+      color: "green",
+    }, // C to G
+    {
+      start: "G",
+      end: "C",
+      weight: 1340,
+      name: "Lift",
+      color: "green",
+    }, // G to C
+    {
+      start: "D",
+      end: "G",
+      weight: 650,
+      name: "36 Alibi für Seitensprung",
+      color: "blue",
+    }, // D to G
+    {
+      start: "G",
+      end: "D",
+      weight: 650,
+      name: "36 Alibi für Seitensprung",
+      color: "blue",
+    }, // G to D
+    {
+      start: "D",
+      end: "G",
+      weight: 500,
+      name: "Lift",
+      color: "green",
+    }, // D to G
+    {
+      start: "G",
+      end: "D",
+      weight: 500,
+      name: "Lift",
+      color: "green",
+    }, // G to D
+    {
+      start: "D",
+      end: "E",
+      weight: 900,
+      name: "22 Seitensprung",
+      color: "red",
+    }, // D to E
+    {
+      start: "E",
+      end: "D",
+      weight: 900,
+      name: "22 Seitensprung",
+      color: "red",
+    }, // E to D
+    {
+      start: "D",
+      end: "E",
+      weight: 850,
+      name: "Lift",
+      color: "green",
+    }, // D to E
+    {
+      start: "E",
+      end: "D",
+      weight: 850,
+      name: "Lift",
+      color: "green",
+    }, // E to D
+    {
+      start: "E",
+      end: "F",
+      weight: 830,
+      name: "25 Abfahrt Sonnenbahn",
+      color: "red",
+    }, // E to F
+    {
+      start: "F",
+      end: "E",
+      weight: 830,
+      name: "25 Abfahrt Sonnenbahn",
+      color: "red",
+    }, // F to E
+    {
+      start: "E",
+      end: "F",
+      weight: 880,
+      name: "32 Skiweg zur Sonnenbahn",
+      color: "blue",
+    }, // E to F
+    {
+      start: "F",
+      end: "E",
+      weight: 880,
+      name: "32 Skiweg zur Sonnenbahn",
+      color: "blue",
+    }, // F to E
+    {
+      start: "E",
+      end: "F",
+      weight: 750,
+      name: "Lift",
+      color: "green",
+    }, // E to F
+    {
+      start: "F",
+      end: "E",
+      weight: 750,
+      name: "Lift",
+      color: "green",
+    }, // F to E
+    {
+      start: "G",
+      end: "H",
+      weight: 550,
+      name: "Lift",
+      color: "green",
+    }, // G to H
+    {
+      start: "H",
+      end: "G",
+      weight: 550,
+      name: "Lift",
+      color: "green",
+    }, // H to G
+    {
+      start: "G",
+      end: "H",
+      weight: 600,
+      name: "26 Wildkopfabfahrt",
+      color: "blue",
+    }, // G to H
+    {
+      start: "H",
+      end: "G",
+      weight: 600,
+      name: "26 Wildkopfabfahrt",
+      color: "blue",
+    }, // H to G
+    {
+      start: "H",
+      end: "I",
+      weight: 300,
+      name: "Lift",
+      color: "green",
+    }, // H to I
+    {
+      start: "I",
+      end: "H",
+      weight: 300,
+      name: "Lift",
+      color: "green",
+    }, // I to H
+    {
+      start: "I",
+      end: "J",
+      weight: 1300,
+      name: "3 Pauliabfahrt",
+      color: "red",
+    }, // I to J
+    {
+      start: "J",
+      end: "I",
+      weight: 1300,
+      name: "3 Pauliabfahrt",
+      color: "red",
+    }, // J to I
+    {
+      start: "I",
+      end: "J",
+      weight: 1000,
+      name: "Lift",
+      color: "green",
+    }, // I to J
+    {
+      start: "J",
+      end: "I",
+      weight: 1000,
+      name: "Lift",
+      color: "green",
+    }, // J to I
+    {
+      start: "I",
+      end: "L",
+      weight: 2200,
+      name: "Lift",
+      color: "green",
+    }, // I to L
+    {
+      start: "L",
+      end: "I",
+      weight: 2200,
+      name: "Lift",
+      color: "green",
+    }, // L to I
+    {
+      start: "I",
+      end: "L",
+      weight: 2350,
+      name: "1 Kornockabfahrt",
+      color: "blue",
+    }, // I to L
+    {
+      start: "L",
+      end: "I",
+      weight: 2350,
+      name: "1 Kornockabfahrt",
+      color: "blue",
+    }, // L to I
+    {
+      start: "I",
+      end: "M",
+      weight: 300,
+      name: "5 Engländerabfahrt",
+      color: "red",
+    }, // I to M
+    {
+      start: "M",
+      end: "I",
+      weight: 300,
+      name: "5 Engländerabfahrt",
+      color: "red",
+    }, // M to I
+    {
+      start: "I",
+      end: "M",
+      weight: 260,
+      name: "Lift",
+      color: "green",
+    }, // I to M
+    {
+      start: "M",
+      end: "I",
+      weight: 260,
+      name: "Lift",
+      color: "green",
+    }, // M to I
+    {
+      start: "J",
+      end: "K",
+      weight: 1970,
+      name: "17 Lampelabfahrt",
+      color: "blue",
+    }, // J to K
+    {
+      start: "K",
+      end: "J",
+      weight: 1970,
+      name: "17 Lampelabfahrt",
+      color: "blue",
+    }, // K to J
+    {
+      start: "J",
+      end: "K",
+      weight: 1790,
+      name: "Lift",
+      color: "green",
+    }, // J to K
+    {
+      start: "K",
+      end: "J",
+      weight: 1790,
+      name: "Lift",
+      color: "green",
+    }, // K to J
+    {
+      start: "K",
+      end: "L",
+      weight: 1500,
+      name: "14 Schafalmabfahrt",
+      color: "black",
+    }, // K to L
+    {
+      start: "L",
+      end: "K",
+      weight: 1500,
+      name: "14 Schafalmabfahrt",
+      color: "black",
+    }, // L to K
+    {
+      start: "K",
+      end: "L",
+      weight: 1625,
+      name: "Lift",
+      color: "green",
+    }, // K to L
+    {
+      start: "L",
+      end: "K",
+      weight: 1625,
+      name: "Lift",
+      color: "green",
+    }, // L to K
+    {
+      start: "M",
+      end: "O",
+      weight: 500,
+      name: "7 Übungswiesenabfahrt rechts",
+      color: "black",
+    }, // M to O
+    {
+      start: "O",
+      end: "M",
+      weight: 500,
+      name: "7 Übungswiesenabfahrt rechts",
+      color: "black",
+    }, // O to M
+    {
+      start: "M",
+      end: "O",
+      weight: 480,
+      name: "Lift",
+      color: "green",
+    }, // M to O
+    {
+      start: "O",
+      end: "M",
+      weight: 480,
+      name: "Lift",
+      color: "green",
+    }, // O to M
+    {
+      start: "O",
+      end: "N",
+      weight: 950,
+      name: "12 Panoramaabfahrt",
+      color: "red",
+    }, // O to N
+    {
+      start: "N",
+      end: "O",
+      weight: 950,
+      name: "12 Panoramaabfahrt",
+      color: "red",
+    }, // N to O
+    {
+      start: "O",
+      end: "N",
+      weight: 800,
+      name: "Lift",
+      color: "green",
+    }, // O to N
+    {
+      start: "N",
+      end: "O",
+      weight: 800,
+      name: "Lift",
+      color: "green",
+    }, // N to O
   ];
 
   ProcessedEdge.insertMany(edgesData)
