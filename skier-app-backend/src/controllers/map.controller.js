@@ -1,7 +1,7 @@
+const Node = require("../models/node.model");
 const Restroom = require("../models/restroom.model");
 const Station = require("../models/station.model");
 const Restaurant = require("../models/restaurant.model");
-const Node = require("../models/node.model");
 const ProcessedEdge = require("../models/pedge.model");
 
 // Get all coordinate
@@ -36,7 +36,7 @@ const getShortestPath = async (req, res) => {
     adjacencyList[node.text] = [];
   });
 
-  if (criteria === "fastest")
+  if (criteria === "fastest") {
     // Populate adjacency lists with edges
     edges.forEach((edge) => {
       adjacencyList[edge.start].push({
@@ -45,6 +45,23 @@ const getShortestPath = async (req, res) => {
         name: edge.name, // Include the name of the edge
       });
     });
+  } else if (criteria === "shortest") {
+    edges.forEach((edge) => {
+      let weightMultiplier = 1; // Default multiplier
+      if (edge.color === "blue") {
+        weightMultiplier = 1;
+      } else if (edge.color === "red") {
+        weightMultiplier = 1.2;
+      } else if (edge.color === "black") {
+        weightMultiplier = 2;
+      }
+      adjacencyList[edge.start].push({
+        node: edge.end,
+        weight: edge.weight * weightMultiplier,
+        name: edge.name, // Include the name of the edge
+      });
+    });
+  }
   // Populate adjacency lists with edges
   else
     edges.forEach((edge) => {
