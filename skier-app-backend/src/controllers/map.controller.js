@@ -17,7 +17,9 @@ const getCoordinates = async (req, res) => {
 };
 
 const getShortestPath = async (req, res) => {
-  const { startPoint, endPoint, difficulty, criteria } = req.body;
+  let { startPoint, endPoint, difficulty, criteria } = req.body;
+  difficulty = difficulty.toLowerCase();
+  criteria = criteria.toLowerCase();
   if (!startPoint || !endPoint)
     return res.json({
       status: "error",
@@ -42,9 +44,10 @@ const getShortestPath = async (req, res) => {
         node: edge.end,
         weight: edge.weight / 50,
         name: edge.name, // Include the name of the edge
+        color: edge.color,
       });
     });
-  } else if (criteria === "shortest") {
+  } else if (criteria === "easiest") {
     edges.forEach((edge) => {
       let weightMultiplier = 1; // Default multiplier
       if (edge.color === "blue") {
@@ -58,18 +61,22 @@ const getShortestPath = async (req, res) => {
         node: edge.end,
         weight: edge.weight * weightMultiplier,
         name: edge.name, // Include the name of the edge
+        color: edge.color,
       });
     });
   }
   // Populate adjacency lists with edges
-  else
+  else if (criteria === "shortest") {
+    console.log("criteria : ", criteria);
     edges.forEach((edge) => {
       adjacencyList[edge.start].push({
         node: edge.end,
         weight: edge.weight,
         name: edge.name, // Include the name of the edge
+        color: edge.color,
       });
     });
+  }
 
   const result = shortestPathHelper(adjacencyList, startPoint, endPoint);
   return res.json({ status: "ok", shortestPath: result.shortestPath });
@@ -103,13 +110,16 @@ const shortestPathHelper = (adjacencyList, startNode, targetNode) => {
     }
     queue.splice(queue.indexOf(closestNode), 1);
 
+    let foundNonLiftNeighbor = false; // Flag to track if any non-lift neighbor is found
+
     for (let neighbor of adjacencyList[closestNode]) {
       const totalDistance = distances[closestNode] + neighbor.weight;
-      // Modify the condition to check if the node name contains "Lift"
+      console.log(neighbor.color);
       if (
         !neighbor.name.includes("Lift") &&
         totalDistance < distances[neighbor.node]
       ) {
+        foundNonLiftNeighbor = true; // Set flag to true if non-lift neighbor is found
         distances[neighbor.node] = totalDistance;
         predecessors[neighbor.node] = {
           node: closestNode,
@@ -117,21 +127,17 @@ const shortestPathHelper = (adjacencyList, startNode, targetNode) => {
         };
       }
     }
-  }
 
-  // If there are no nodes without "Lift", select nodes with "Lift"
-  if (queue.length === 0) {
-    for (let closestNode in adjacencyList) {
-      if (closestNode.includes("Lift")) {
-        for (let neighbor of adjacencyList[closestNode]) {
-          const totalDistance = distances[closestNode] + neighbor.weight;
-          if (totalDistance < distances[neighbor.node]) {
-            distances[neighbor.node] = totalDistance;
-            predecessors[neighbor.node] = {
-              node: closestNode,
-              name: neighbor.name,
-            };
-          }
+    // Add another condition to select neighbor including "Lift" if no non-lift neighbor is found
+    if (!foundNonLiftNeighbor) {
+      for (let neighbor of adjacencyList[closestNode]) {
+        const totalDistance = distances[closestNode] + neighbor.weight;
+        if (totalDistance < distances[neighbor.node]) {
+          distances[neighbor.node] = totalDistance;
+          predecessors[neighbor.node] = {
+            node: closestNode,
+            name: neighbor.name,
+          };
         }
       }
     }

@@ -15,7 +15,7 @@ const Graph = () => {
   const [end, setEnd] = useState(null);
   const [shortestPath, setShortestPath] = useState([]);
   const [initialEdges, setInitialEdges] = useState([]);
-  const [pathTpye, setPathType] = useState([]);
+  const [criteria, setCriteria] = useState("Easiest");
   const [difficulty, setDifficulty] = useState("Blue");
   const difficultyOptions = [
     { id: 0, value: "All" },
@@ -137,8 +137,9 @@ const Graph = () => {
     setDifficulty(e.target.value);
   };
 
-  const handleTypeChange = (e) => {
-    setPathType(e.target.value);
+  const handleCriteriaChange = (e) => {
+    console.log(e.target.value);
+    setCriteria(e.target.value);
   };
   const getShortestPath = async () => {
     if (start && end && difficulty)
@@ -147,7 +148,7 @@ const Graph = () => {
           startPoint: start[0].text,
           endPoint: end[0].text,
           difficulty: difficulty,
-          criteria: "fastest",
+          criteria: criteria,
         })
         .then((res) => {
           console.log(res.data);
@@ -248,8 +249,8 @@ const Graph = () => {
             Select Path Type
           </label>
           <select
-            value={pathTpye}
-            onChange={(e) => handleTypeChange(e)}
+            value={criteria}
+            onChange={(e) => handleCriteriaChange(e)}
             id="difficulties"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
@@ -302,10 +303,12 @@ const Graph = () => {
                   x={(edge.startx + edge.endx) / 2}
                   y={(edge.starty + edge.endy) / 2}
                   text={edge.name.includes("Lift") ? edge.name : ""}
+                  // text={!edge.name.includes("Lift") ? edge.weight : ""}
                   fontSize={8}
                   fill="#56cfff"
                 />
                 <Line
+                  onClick={() => console.log("hiiii")}
                   points={
                     edge.fill === "green"
                       ? [edge.startx, edge.starty, edge.endx, edge.endy]
