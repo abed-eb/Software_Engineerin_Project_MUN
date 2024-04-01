@@ -25,9 +25,8 @@ const Graph = () => {
   ];
   const typeOptions = [
     { id: 0, value: "Easiest" },
-    { id: 2, value: "Shortest" },
-    { id: 2, value: "Most Scenic" },
-    { id: 4, value: "Most Difficult" },
+    { id: 1, value: "Shortest" },
+    { id: 2, value: "Fastest" },
   ];
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
@@ -105,7 +104,7 @@ const Graph = () => {
           ) {
             console.log("found");
             console.log(edgesCopy[i].fill);
-            edgesCopy[i].strokeWidth = 8;
+            edgesCopy[i].strokeWidth = 4;
           } else if (
             e.end === edge.startName &&
             e.start === edge.endName &&
@@ -113,7 +112,7 @@ const Graph = () => {
           ) {
             console.log("found");
             console.log(edgesCopy[i].fill);
-            edgesCopy[i].strokeWidth = 8;
+            edgesCopy[i].strokeWidth = 4;
           }
         }
       }
