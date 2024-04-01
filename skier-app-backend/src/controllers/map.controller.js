@@ -84,14 +84,25 @@ const getShortestPath = async (req, res) => {
     });
   }
 
-  const result = shortestPathHelper(adjacencyList, startPoint, endPoint);
+  const result = shortestPathHelper(
+    adjacencyList,
+    startPoint,
+    endPoint,
+    difficulty
+  );
   return res.json({ status: "ok", shortestPath: result.shortestPath });
 };
 
-const shortestPathHelper = (adjacencyList, startNode, targetNode) => {
+const shortestPathHelper = (
+  adjacencyList,
+  startNode,
+  targetNode,
+  difficulty
+) => {
   // Initialize distances with Infinity and predecessor as null
   const distances = {};
   const predecessors = {};
+
   for (let node in adjacencyList) {
     distances[node] = Infinity;
     predecessors[node] = null;
@@ -118,12 +129,31 @@ const shortestPathHelper = (adjacencyList, startNode, targetNode) => {
 
     for (let neighbor of adjacencyList[closestNode]) {
       const totalDistance = distances[closestNode] + neighbor.weight;
-      if (totalDistance < distances[neighbor.node]) {
-        distances[neighbor.node] = totalDistance;
-        predecessors[neighbor.node] = {
-          node: closestNode,
-          name: neighbor.name,
-        };
+      const isCorrectColor = neighbor.color === difficulty;
+      const isGreenEdge = neighbor.color === "green";
+
+      // Prioritize selected color edge, fallback to green edge
+      if (difficulty !== "all") {
+        if (
+          (isCorrectColor && totalDistance < distances[neighbor.node]) ||
+          (!isCorrectColor &&
+            isGreenEdge &&
+            totalDistance < distances[neighbor.node])
+        ) {
+          distances[neighbor.node] = totalDistance;
+          predecessors[neighbor.node] = {
+            node: closestNode,
+            name: neighbor.name,
+          };
+        }
+      } else {
+        if (totalDistance < distances[neighbor.node]) {
+          distances[neighbor.node] = totalDistance;
+          predecessors[neighbor.node] = {
+            node: closestNode,
+            name: neighbor.name,
+          };
+        }
       }
     }
   }
