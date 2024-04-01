@@ -40,9 +40,16 @@ const getShortestPath = async (req, res) => {
   if (criteria === "fastest") {
     // Populate adjacency lists with edges
     edges.forEach((edge) => {
+      if (edge.color === "blue") {
+        weightMultiplier = 1;
+      } else if (edge.color === "red") {
+        weightMultiplier = 1.2;
+      } else if (edge.color === "black") {
+        weightMultiplier = 2;
+      }
       adjacencyList[edge.start].push({
         node: edge.end,
-        weight: edge.weight / 50,
+        weight: (edge.weight * weightMultiplier) / 50,
         name: edge.name, // Include the name of the edge
         color: edge.color,
       });
@@ -67,7 +74,6 @@ const getShortestPath = async (req, res) => {
   }
   // Populate adjacency lists with edges
   else if (criteria === "shortest") {
-    console.log("criteria : ", criteria);
     edges.forEach((edge) => {
       adjacencyList[edge.start].push({
         node: edge.end,
@@ -110,35 +116,14 @@ const shortestPathHelper = (adjacencyList, startNode, targetNode) => {
     }
     queue.splice(queue.indexOf(closestNode), 1);
 
-    let foundNonLiftNeighbor = false; // Flag to track if any non-lift neighbor is found
-
     for (let neighbor of adjacencyList[closestNode]) {
       const totalDistance = distances[closestNode] + neighbor.weight;
-      console.log(neighbor.color);
-      if (
-        !neighbor.name.includes("Lift") &&
-        totalDistance < distances[neighbor.node]
-      ) {
-        foundNonLiftNeighbor = true; // Set flag to true if non-lift neighbor is found
+      if (totalDistance < distances[neighbor.node]) {
         distances[neighbor.node] = totalDistance;
         predecessors[neighbor.node] = {
           node: closestNode,
           name: neighbor.name,
         };
-      }
-    }
-
-    // Add another condition to select neighbor including "Lift" if no non-lift neighbor is found
-    if (!foundNonLiftNeighbor) {
-      for (let neighbor of adjacencyList[closestNode]) {
-        const totalDistance = distances[closestNode] + neighbor.weight;
-        if (totalDistance < distances[neighbor.node]) {
-          distances[neighbor.node] = totalDistance;
-          predecessors[neighbor.node] = {
-            node: closestNode,
-            name: neighbor.name,
-          };
-        }
       }
     }
   }

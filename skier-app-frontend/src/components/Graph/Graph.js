@@ -95,7 +95,6 @@ const Graph = () => {
         const edge = edgesCopy[i];
         for (let j = 0; j < shortestPathCopy.length; j++) {
           const e = shortestPathCopy[j];
-          console.log("shortest: ", e);
           if (edge.startName === "H") console.log("edge: ", edge);
           if (
             e.start === edge.startName &&
@@ -104,7 +103,8 @@ const Graph = () => {
           ) {
             console.log("found");
             console.log(edgesCopy[i].fill);
-            edgesCopy[i].strokeWidth = 4;
+            edgesCopy[i].strokeWidth = 3.5;
+            edgesCopy[i].dash = [0, 0];
           } else if (
             e.end === edge.startName &&
             e.start === edge.endName &&
@@ -112,7 +112,8 @@ const Graph = () => {
           ) {
             console.log("found");
             console.log(edgesCopy[i].fill);
-            edgesCopy[i].strokeWidth = 4;
+            edgesCopy[i].strokeWidth = 3.5;
+            edgesCopy[i].dash = [0, 0];
           }
         }
       }
@@ -130,6 +131,10 @@ const Graph = () => {
       setShortestPath([]);
       setStart(nodes.filter((c) => c.text === name));
     }
+  };
+
+  const showLineDetail = (line) => {
+    console.log(line);
   };
 
   const handleDifficultyChange = (e) => {
@@ -211,6 +216,7 @@ const Graph = () => {
         fill: edge.color,
         strokeWidth: 1,
         name: edge.name,
+        dash: [0, 0],
       };
       lines[j] = e;
     }
@@ -299,15 +305,18 @@ const Graph = () => {
             return (
               <>
                 <Text
-                  x={(edge.startx + edge.endx) / 2}
-                  y={(edge.starty + edge.endy) / 2}
-                  text={edge.name.includes("Lift") ? edge.name : ""}
-                  // text={!edge.name.includes("Lift") ? edge.weight : ""}
+                  x={(edge.startx + edge.endx) / 2 - 5}
+                  y={(edge.starty + edge.endy) / 2 + 4}
+                  // text={edge.name.includes("Lift") ? edge.name : ""}
+                  text={!edge.name.includes("Lift") ? edge.name : ""}
                   fontSize={8}
                   fill="#56cfff"
                 />
+
                 <Line
-                  onClick={() => console.log("hiiii")}
+                  onClick={(edge) => {
+                    showLineDetail(edge);
+                  }}
                   points={
                     edge.fill === "green"
                       ? [edge.startx, edge.starty, edge.endx, edge.endy]
@@ -333,6 +342,8 @@ const Graph = () => {
                   strokeWidth={edge.strokeWidth}
                   lineCap="round"
                   tension={0.5}
+                  listening
+                  dash={edge.dash}
                 />
               </>
             );
