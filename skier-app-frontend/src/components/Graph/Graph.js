@@ -6,6 +6,8 @@ import startFlag from "../../Assets/start.png";
 import endFlag from "../../Assets/end.png";
 import useImage from "use-image";
 import axios from "axios";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+
 const Graph = () => {
   const [flagIcon] = useImage(flag);
   const [startFlagIcon] = useImage(startFlag);
@@ -32,6 +34,10 @@ const Graph = () => {
   const [edges, setEdges] = useState([]);
   const [rawPoints, setRawPoints] = useState([]);
   const [rawLines, setRawLines] = useState([]);
+  const [edgeName, setEdgeName] = useState("");
+  const [edgeWeight, setEdgeWeight] = useState(0);
+  const [edgeColor, setEdgeColor] = useState("");
+  const [edgeDataVisible, setEdgeDataVisible] = useState(false);
 
   useEffect(() => {
     getGraph();
@@ -103,8 +109,8 @@ const Graph = () => {
           ) {
             console.log("found");
             console.log(edgesCopy[i].fill);
-            edgesCopy[i].strokeWidth = 3.5;
-            edgesCopy[i].dash = [0, 0];
+            edgesCopy[i].strokeWidth = 2.5;
+            edgesCopy[i].dash = [10, 5];
           } else if (
             e.end === edge.startName &&
             e.start === edge.endName &&
@@ -112,8 +118,8 @@ const Graph = () => {
           ) {
             console.log("found");
             console.log(edgesCopy[i].fill);
-            edgesCopy[i].strokeWidth = 3.5;
-            edgesCopy[i].dash = [0, 0];
+            edgesCopy[i].strokeWidth = 2.5;
+            edgesCopy[i].dash = [10, 5];
           }
         }
       }
@@ -214,7 +220,7 @@ const Graph = () => {
         midx: (start[0]?.x + end[0]?.x) / 2,
         midy: (start[0]?.y + end[0]?.y) / 2,
         fill: edge.color,
-        strokeWidth: 1,
+        strokeWidth: 2,
         name: edge.name,
         dash: [0, 0],
       };
@@ -224,9 +230,26 @@ const Graph = () => {
     setEdges(lines);
     setInitialEdges(lines);
   };
+  const handleMouseEnter = (e, edge) => {
+    console.log(edge);
+    setEdgeName(edge.name);
+    setEdgeWeight(edge.weight);
+    if (edge.fill === "black") setEdgeColor("text-gray-900");
+    if (edge.fill === "red") setEdgeColor("text-red-700");
+    if (edge.fill === "green") setEdgeColor("text-green-700");
+    if (edge.fill === "blue") setEdgeColor("text-blue-700");
+    setEdgeDataVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setEdgeDataVisible(false);
+  };
 
   return (
     <div>
+      <div className="text-gray-900 font-bold p-2">
+        Click on you desired station (flags) and start routing.
+      </div>
       <div className="m-2 grid lg:grid-cols-6 md:grid-cols-2 grid-cols-1 gap-4 d-flex items-center content-center">
         <div>
           <label
@@ -271,8 +294,90 @@ const Graph = () => {
           show path
         </button>
       </div>
-      <Stage width={2000} height={2000}>
+      <div className="p-2  h-5 w-full">
+        <div className={edgeColor}>
+          {edgeDataVisible && (
+            <div className="w-full grid grid-cols-4 gap-4 d-flex items-center content-start">
+              <div className="w-full d-flex items-center content-center">
+                <div>
+                  <h3 className="font-bold text-lg">Slope/Lift Name: </h3>
+                  <h5 className="font-normal text-md">{edgeName}</h5>
+                </div>
+              </div>
+              <div className="w-full d-flex items-center content-center">
+                <div>
+                  <h3 className="font-bold text-lg">Slope/Lift Length: </h3>
+                  <h5 className="font-normal text-md">{edgeWeight} m</h5>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="mt-6 p-2 text-gray-900 h-5 w-full">
+        {shortestPath.length > 0 && (
+          <h5 className="font-normal text-md">
+            <div className="font-bold text-lg">Suggested Path: </div>
+            {shortestPath.map((edge, index) => {
+              return (
+                <div>
+                  {index + 1}
+                  {". "}
+                  {!edge.name.includes("Lift")
+                    ? edge.name + " (Slope)"
+                    : edge.name}
+                </div>
+              );
+            })}
+          </h5>
+        )}
+      </div>
+      <Stage width={1250} height={1250}>
         <Layer>
+          <Text
+            x={520}
+            y={80}
+            text={"Hover on each slope to see the details"}
+            fontSize={15}
+            fill="#030712"
+            fontStyle="bold"
+          />
+          <Text
+            x={20}
+            y={580}
+            text={"Blue: Easy Slopes"}
+            fontSize={12}
+            fill="#2563eb"
+          />
+          <Text
+            x={20}
+            y={600}
+            text={"Red: Medium Slopes"}
+            fontSize={12}
+            fill="#dc2626"
+          />
+          <Text
+            x={20}
+            y={620}
+            text={"Black: Difficult Slopes"}
+            fontSize={12}
+            fill="#020617"
+          />
+          <Text
+            x={20}
+            y={640}
+            text={"Green: Lifts"}
+            fontSize={12}
+            fill="#16a34a"
+          />
+          <Text
+            x={20}
+            y={660}
+            text={"- - - - - : Suggested Path"}
+            fontSize={13}
+            fontStyle="bold"
+            fill="#020617"
+          />
           {nodes.map((circle) => {
             return (
               <div>
@@ -294,58 +399,59 @@ const Graph = () => {
                       ? endFlagIcon
                       : flagIcon
                   }
-                  width={30}
-                  height={30}
+                  width={40}
+                  height={40}
                 />
               </div>
             );
           })}
 
-          {edges.map((edge) => {
+          {edges.map((edge, index) => {
             return (
-              <>
-                <Text
+              <div key={index}>
+                {/* <Text
                   x={(edge.startx + edge.endx) / 2 - 5}
                   y={(edge.starty + edge.endy) / 2 + 4}
-                  // text={edge.name.includes("Lift") ? edge.name : ""}
-                  text={!edge.name.includes("Lift") ? edge.name : ""}
+                  text={edge.name.includes("Lift") ? edge.name : ""}
+                  // text={!edge.name.includes("Lift") ? edge.name : ""}
                   fontSize={8}
                   fill="#56cfff"
-                />
-
-                <Line
-                  onClick={(edge) => {
-                    showLineDetail(edge);
-                  }}
-                  points={
-                    edge.fill === "green"
-                      ? [edge.startx, edge.starty, edge.endx, edge.endy]
-                      : edge.fill === "red" || edge.fill === "black"
-                      ? [
-                          edge.startx,
-                          edge.starty,
-                          edge.midx,
-                          edge.starty,
-                          edge.endx,
-                          edge.endy,
-                        ]
-                      : [
-                          edge.startx,
-                          edge.starty,
-                          edge.midx,
-                          edge.endy,
-                          edge.endx,
-                          edge.endy,
-                        ]
-                  }
-                  stroke={edge.fill}
-                  strokeWidth={edge.strokeWidth}
-                  lineCap="round"
-                  tension={0.5}
-                  listening
-                  dash={edge.dash}
-                />
-              </>
+                /> */}
+                <div data-tooltip-id={edge.name}>
+                  <Line
+                    onClick={() => showLineDetail(edge)}
+                    points={
+                      edge.fill === "green"
+                        ? [edge.startx, edge.starty, edge.endx, edge.endy]
+                        : edge.fill === "red" || edge.fill === "black"
+                        ? [
+                            edge.startx,
+                            edge.starty,
+                            edge.midx,
+                            edge.starty,
+                            edge.endx,
+                            edge.endy,
+                          ]
+                        : [
+                            edge.startx,
+                            edge.starty,
+                            edge.midx,
+                            edge.endy,
+                            edge.endx,
+                            edge.endy,
+                          ]
+                    }
+                    stroke={edge.fill}
+                    strokeWidth={3}
+                    lineCap="round"
+                    tension={0.5}
+                    listening
+                    dash={edge.dash}
+                    onMouseEnter={(e) => handleMouseEnter(e, edge)}
+                    onMouseLeave={handleMouseLeave}
+                  />
+                </div>
+              </div>
             );
           })}
         </Layer>
