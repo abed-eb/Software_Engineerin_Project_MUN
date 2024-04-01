@@ -232,7 +232,7 @@ const createEdge = () => {
       end: "L",
       weight: 1500,
       name: "14 Schafalmabfahrt",
-      color: "black",
+      color: "blue",
     }, // K to L
     {
       start: "K",
@@ -240,6 +240,13 @@ const createEdge = () => {
       weight: 1625,
       name: "Lift 13",
       color: "green",
+    }, // K to L
+    {
+      start: "K",
+      end: "L",
+      weight: 1000,
+      name: "15 Schafnase",
+      color: "black",
     }, // K to L
     {
       start: "M",
@@ -660,16 +667,30 @@ const createProcessedEdge = () => {
     {
       start: "K",
       end: "L",
+      weight: 1000,
+      name: "15 Schafnase",
+      color: "black",
+    }, // K to L
+    {
+      start: "L",
+      end: "K",
+      weight: 1000,
+      name: "15 Schafnase",
+      color: "black",
+    }, // L to K
+    {
+      start: "K",
+      end: "L",
       weight: 1500,
       name: "14 Schafalmabfahrt",
-      color: "black",
+      color: "blue",
     }, // K to L
     {
       start: "L",
       end: "K",
       weight: 1500,
       name: "14 Schafalmabfahrt",
-      color: "black",
+      color: "blue",
     }, // L to K
     {
       start: "K",
