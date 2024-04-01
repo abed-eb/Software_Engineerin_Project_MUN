@@ -332,7 +332,7 @@ const Graph = () => {
           </h5>
         )}
       </div>
-      <Stage width={1250} height={1250}>
+      <Stage width={1250} height={650}>
         <Layer>
           <Text
             x={520}
