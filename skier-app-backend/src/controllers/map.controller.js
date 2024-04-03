@@ -177,6 +177,7 @@ const shortestPathHelper = (
 const getAllPaths = async (req, res) => {
   let { startPoint, endPoint } = req.body;
 
+  // Check if both start point and end point are provided
   if (!startPoint || !endPoint)
     return res.status(400).json({
       status: "error",
@@ -188,16 +189,36 @@ const getAllPaths = async (req, res) => {
 
   const adjacencyList = {};
 
+  // Create adjacency list from edges
   nodes.forEach((node) => {
     adjacencyList[node.text] = [];
   });
 
   edges.forEach((edge) => {
-    adjacencyList[edge.start].push({
-      node: edge.end,
-      name: edge.name,
-    });
+    if (adjacencyList[edge.start]) {
+      // Check if start node exists
+      adjacencyList[edge.start].push({
+        node: edge.end,
+        name: edge.name,
+      });
+    }
   });
+
+  // Check if start point and end point exist in the graph
+  if (!adjacencyList[startPoint] || !adjacencyList[endPoint]) {
+    return res.status(400).json({
+      status: "error",
+      error: "Start point or end point does not exist in the graph",
+    });
+  }
+
+  // Check if there are edges connected to the start point
+  if (adjacencyList[startPoint].length === 0) {
+    return res.status(400).json({
+      status: "error",
+      error: "No edges found for the start point",
+    });
+  }
 
   const allPaths = [];
   const path = [];
