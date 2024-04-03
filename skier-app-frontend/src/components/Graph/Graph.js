@@ -332,10 +332,10 @@ const Graph = () => {
           </h5>
         )}
       </div>
-      <Stage width={1250} height={650}>
+      <Stage width={1450} height={650}>
         <Layer>
           <Text
-            x={520}
+            x={720}
             y={80}
             text={"Hover on each slope to see the details"}
             fontSize={15}
