@@ -14,8 +14,7 @@ const getCoordinates = async (req, res) => {
 };
 
 const getShortestPath = async (req, res) => {
-  let { startPoint, endPoint, difficulty, criteria } = req.body;
-  difficulty = difficulty.toLowerCase();
+  let { startPoint, endPoint, difficulties, criteria } = req.body;
   criteria = criteria.toLowerCase();
   if (!startPoint || !endPoint)
     return res.json({
@@ -46,12 +45,13 @@ const getShortestPath = async (req, res) => {
       }
       adjacencyList[edge.start].push({
         node: edge.end,
-        weight: (edge.weight * weightMultiplier) / 50,
+        weight: (edge.weight * weightMultiplier) / 333.333,
         name: edge.name, // Include the name of the edge
         color: edge.color,
       });
     });
   } else if (criteria === "easiest") {
+    console.log("here");
     edges.forEach((edge) => {
       let weightMultiplier = 1; // Default multiplier
       if (edge.color === "blue") {
@@ -85,7 +85,7 @@ const getShortestPath = async (req, res) => {
     adjacencyList,
     startPoint,
     endPoint,
-    difficulty
+    difficulties
   );
   return res.json({ status: "ok", shortestPath: result.shortestPath });
 };
@@ -94,7 +94,7 @@ const shortestPathHelper = (
   adjacencyList,
   startNode,
   targetNode,
-  difficulty
+  difficulties
 ) => {
   // Initialize distances with Infinity and predecessor as null
   const distances = {};
@@ -126,11 +126,12 @@ const shortestPathHelper = (
 
     for (let neighbor of adjacencyList[closestNode]) {
       const totalDistance = distances[closestNode] + neighbor.weight;
-      const isCorrectColor = neighbor.color === difficulty;
+      let isCorrectColor = false;
+      if (difficulties.includes(neighbor.color)) isCorrectColor = true;
       const isGreenEdge = neighbor.color === "green";
 
       // Prioritize selected color edge, fallback to green edge
-      if (difficulty !== "all") {
+      if (difficulties.length !== 3) {
         if (
           (isCorrectColor && totalDistance < distances[neighbor.node]) ||
           (!isCorrectColor &&
@@ -144,6 +145,8 @@ const shortestPathHelper = (
           };
         }
       } else {
+        console.log("here2");
+        console.log(totalDistance, ", ", distances[neighbor.node]);
         if (totalDistance < distances[neighbor.node]) {
           distances[neighbor.node] = totalDistance;
           predecessors[neighbor.node] = {

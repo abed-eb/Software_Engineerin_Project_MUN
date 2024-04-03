@@ -39,7 +39,7 @@ const createEdge = () => {
       end: "G",
       weight: 1550,
       name: "21 Eisenhutabfahrt",
-      color: "red",
+      color: "black",
     }, // A to G
     {
       start: "A",
@@ -294,14 +294,14 @@ const createProcessedEdge = () => {
       end: "G",
       weight: 1550,
       name: "21 Eisenhutabfahrt",
-      color: "red",
+      color: "black",
     }, // A to G
     {
       start: "G",
       end: "A",
       weight: 1550,
       name: "21 Eisenhutabfahrt",
-      color: "red",
+      color: "black",
     }, // G to A
     {
       start: "A",
