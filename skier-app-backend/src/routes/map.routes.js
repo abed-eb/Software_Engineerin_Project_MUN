@@ -7,7 +7,7 @@ const {
   getAllPaths,
 } = require("../controllers/map.controller");
 
-router.get("/locations", getCoordinates);
+router.get("/nodes", getCoordinates);
 router.post("/shortest-path", getShortestPath);
 router.post("/all-paths", getAllPaths);
 

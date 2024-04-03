@@ -1,18 +1,15 @@
 const Node = require("../models/node.model");
-const Restroom = require("../models/restroom.model");
-const Station = require("../models/station.model");
-const Restaurant = require("../models/restaurant.model");
+const Edge = require("../models/edge.model");
 const ProcessedEdge = require("../models/pedge.model");
 
 // Get all coordinate
 const getCoordinates = async (req, res) => {
   try {
-    const stations = await Station.find({}).select("-__v");
-    const restrooms = await Restroom.find({}).select("-__v");
-    const restaurants = await Restaurant.find({}).select("-__v");
-    return res.json({ status: "ok", stations, restrooms, restaurants });
+    const nodes = await Node.find({}, "-_id -__v");
+    const edges = await Edge.find({}, "-_id -__v");
+    return res.json({ status: "ok", nodes, edges });
   } catch (error) {
-    return res.json({ status: "error", error: "No map coordinates found" });
+    return res.json({ status: "error", error: "No nodes found" });
   }
 };
 
