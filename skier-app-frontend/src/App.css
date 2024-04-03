@@ -1,0 +1,7 @@
+.App {
+    background-image: url("./Assets/resort.jpg");
+
+    background-size      : cover;
+    height               : 112%;
+    background-attachment: fixed;
+}
