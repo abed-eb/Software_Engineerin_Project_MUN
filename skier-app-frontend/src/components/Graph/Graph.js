@@ -38,6 +38,9 @@ const Graph = () => {
   const [edgeWeight, setEdgeWeight] = useState(0);
   const [edgeColor, setEdgeColor] = useState("");
   const [edgeDataVisible, setEdgeDataVisible] = useState(false);
+  const [blueSelected, setBlueSelected] = useState(true);
+  const [redSelected, setRedSelected] = useState(true);
+  const [blackSelected, setBlackSelected] = useState(true);
 
   useEffect(() => {
     getGraph();
@@ -143,21 +146,21 @@ const Graph = () => {
     console.log(line);
   };
 
-  const handleDifficultyChange = (e) => {
-    setDifficulty(e.target.value);
-  };
-
   const handleCriteriaChange = (e) => {
     console.log(e.target.value);
     setCriteria(e.target.value);
   };
   const getShortestPath = async () => {
+    let difficulties = [];
+    if (blueSelected) difficulties.push("blue");
+    if (redSelected) difficulties.push("red");
+    if (blackSelected) difficulties.push("black");
     if (start && end && difficulty)
       axios
         .post("//localhost:4000/api/v1/shortest-path", {
           startPoint: start[0].text,
           endPoint: end[0].text,
-          difficulty: difficulty,
+          difficulty: difficulties,
           criteria: criteria,
         })
         .then((res) => {
@@ -251,7 +254,7 @@ const Graph = () => {
         Click on you desired station (flags) and start routing.
       </div>
       <div className="m-2 grid lg:grid-cols-6 md:grid-cols-2 grid-cols-1 gap-4 d-flex items-center content-center">
-        <div>
+        {/* <div>
           <label
             htmlFor="difficulties"
             className="block mb-2 text-sm font-medium text-gray-900 text black"
@@ -268,7 +271,7 @@ const Graph = () => {
               return <option value={d.value}>{d.value}</option>;
             })}
           </select>
-        </div>
+        </div> */}
         <div>
           <label
             htmlFor="difficulties"
@@ -293,6 +296,42 @@ const Graph = () => {
         >
           show path
         </button>
+      </div>
+      <div className="grid text-gray-900 lg:grid-cols-12 md:grid-cols-8 grid-cols-1 gap-4 d-flex items-center content-center">
+        <h4 className="font-bold p-2 text-normal">Difficulty Level: </h4>
+        <div className="p-2">
+          <label>
+            <input
+              onChange={() => setBlueSelected(!blueSelected)}
+              type="checkbox"
+              class="accent-blue-500"
+              checked={blueSelected}
+            />
+            blue
+          </label>
+        </div>
+        <div className="p-2 text-gray-900">
+          <label>
+            <input
+              onChange={() => setRedSelected(!redSelected)}
+              type="checkbox"
+              class="accent-red-500"
+              checked={redSelected}
+            />
+            red
+          </label>
+        </div>
+        <div className="p-2 text-gray-900">
+          <label>
+            <input
+              onChange={() => setBlackSelected(!blackSelected)}
+              type="checkbox"
+              class="accent-gray-900"
+              checked={blackSelected}
+            />
+            black
+          </label>
+        </div>
       </div>
       <div className="p-2  h-5 w-full">
         <div className={edgeColor}>
@@ -335,7 +374,7 @@ const Graph = () => {
       <Stage width={1450} height={650}>
         <Layer>
           <Text
-            x={720}
+            x={600}
             y={80}
             text={"Hover on each slope to see the details"}
             fontSize={15}
