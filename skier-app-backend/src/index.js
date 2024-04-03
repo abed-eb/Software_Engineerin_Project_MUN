@@ -6,7 +6,6 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 
 const mapRoute = require("./routes/map.routes");
-const locationRoute = require("./routes/location.routes");
 const nodeRoute = require("./routes/node.routes");
 
 const db = require("./config/db");
@@ -16,7 +15,6 @@ app.use(express.json());
 
 //Use Routes
 app.use("/api/v1/", mapRoute);
-app.use("/api/v1/location", locationRoute);
 app.use("/api/v1/node", nodeRoute);
 
 app.get("/", (req, res) => {
