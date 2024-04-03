@@ -199,62 +199,70 @@ const shortestPathHelper = (
 
 //Method for getting all paths
 const getAllPaths = async (req, res) => {
-  let { startPoint, endPoint } = req.body;
+  try {
+    let { startPoint, endPoint } = req.body;
 
-  // Check if both start point and end point are provided
-  if (!startPoint || !endPoint)
-    return res.status(400).json({
-      status: "error",
-      error: "Please provide both startpoint and endpoint",
+    // Check if both start point and end point are provided
+    if (!startPoint || !endPoint)
+      return res.status(400).json({
+        status: "error",
+        error: "Please provide both startpoint and endpoint",
+      });
+
+    const nodes = await Node.find({}, "-_id -__v");
+    const edges = await ProcessedEdge.find({}, "-_id -__v");
+
+    const adjacencyList = {};
+
+    // Create adjacency list from edges
+    nodes.forEach((node) => {
+      adjacencyList[node.text] = [];
     });
 
-  const nodes = await Node.find({}, "-_id -__v");
-  const edges = await ProcessedEdge.find({}, "-_id -__v");
+    edges.forEach((edge) => {
+      if (adjacencyList[edge.start]) {
+        // Check if start node exists
+        adjacencyList[edge.start].push({
+          node: edge.end,
+          name: edge.name,
+        });
+      }
+    });
 
-  const adjacencyList = {};
-
-  // Create adjacency list from edges
-  nodes.forEach((node) => {
-    adjacencyList[node.text] = [];
-  });
-
-  edges.forEach((edge) => {
-    if (adjacencyList[edge.start]) {
-      // Check if start node exists
-      adjacencyList[edge.start].push({
-        node: edge.end,
-        name: edge.name,
+    // Check if start point and end point exist in the graph
+    if (!adjacencyList[startPoint] || !adjacencyList[endPoint]) {
+      return res.status(400).json({
+        status: "error",
+        error: "Start point or end point does not exist in the graph",
       });
     }
-  });
 
-  // Check if start point and end point exist in the graph
-  if (!adjacencyList[startPoint] || !adjacencyList[endPoint]) {
-    return res.status(400).json({
+    // Check if there are edges connected to the start point
+    if (adjacencyList[startPoint].length === 0) {
+      return res.status(400).json({
+        status: "error",
+        error: "No edges found for the start point",
+      });
+    }
+
+    const allPaths = [];
+    const path = [];
+
+    getAllPathsHelper(startPoint, endPoint, adjacencyList, path, allPaths);
+    console.log(allPaths);
+
+    // Return only if there are paths
+    if (allPaths.length) {
+      return res.status(200).json({ status: "ok", paths: allPaths });
+    } else {
+      return res.status(404).json({ status: "error", error: "No paths found" });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({
       status: "error",
-      error: "Start point or end point does not exist in the graph",
+      error: "Internal server error",
     });
-  }
-
-  // Check if there are edges connected to the start point
-  if (adjacencyList[startPoint].length === 0) {
-    return res.status(400).json({
-      status: "error",
-      error: "No edges found for the start point",
-    });
-  }
-
-  const allPaths = [];
-  const path = [];
-
-  getAllPathsHelper(startPoint, endPoint, adjacencyList, path, allPaths);
-  console.log(allPaths);
-
-  // Return only if there are paths
-  if (allPaths.length) {
-    return res.status(200).json({ status: "ok", paths: allPaths });
-  } else {
-    return res.status(404).json({ status: "error", error: "No paths found" });
   }
 };
 
