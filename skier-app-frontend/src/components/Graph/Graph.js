@@ -172,7 +172,7 @@ const Graph = () => {
 
   const getGraph = async () => {
     axios
-      .get("http://localhost:4000/api/v1/node/nodes")
+      .get("http://localhost:4000/api/v1/nodes")
       .then((res) => {
         console.log(res.data);
         let points = res.data.nodes;
