@@ -176,8 +176,9 @@ const shortestPathHelper = (
 //Method for getting all paths
 const getAllPaths = async (req, res) => {
   let { startPoint, endPoint } = req.body;
+
   if (!startPoint || !endPoint)
-    return res.json({
+    return res.status(400).json({
       status: "error",
       error: "Please provide both startpoint and endpoint",
     });
@@ -204,9 +205,11 @@ const getAllPaths = async (req, res) => {
   getAllPathsHelper(startPoint, endPoint, adjacencyList, path, allPaths);
   console.log(allPaths);
 
-  //Return only if there are paths
+  // Return only if there are paths
   if (allPaths.length) {
-    return res.json({ status: "ok", paths: allPaths });
+    return res.status(200).json({ status: "ok", paths: allPaths });
+  } else {
+    return res.status(404).json({ status: "error", error: "No paths found" });
   }
 };
 
