@@ -15,13 +15,21 @@ const getCoordinates = async (req, res) => {
 
 const getShortestPath = async (req, res) => {
   let { startPoint, endPoint, difficulty, criteria } = req.body;
-  difficulty = difficulty.toLowerCase();
-  criteria = criteria.toLowerCase();
+
   if (!startPoint || !endPoint)
     return res.json({
       status: "error",
       error: "Please provide both startpoint and endpoint",
     });
+
+  if (!criteria || !difficulty)
+    return res.json({
+      status: "error",
+      error: "Please provide both criteria and difficulty",
+    });
+
+  difficulty = difficulty ? difficulty.toLowerCase() : null;
+  criteria = criteria ? criteria.toLowerCase() : null;
 
   const nodes = await Node.find({}, "-_id -__v");
   const edges = await ProcessedEdge.find({}, "-_id -__v");
