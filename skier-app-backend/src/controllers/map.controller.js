@@ -14,98 +14,107 @@ const getCoordinates = async (req, res) => {
 };
 
 const getShortestPath = async (req, res) => {
-  let { startPoint, endPoint, difficulty, criteria } = req.body;
+  try {
+    let { startPoint, endPoint, difficulty, criteria } = req.body;
 
-  if (!startPoint || !endPoint)
-    return res.status(400).json({
-      status: "error",
-      error: "Please provide both startpoint and endpoint",
+    if (!startPoint || !endPoint)
+      return res.status(400).json({
+        status: "error",
+        error: "Please provide both startpoint and endpoint",
+      });
+
+    if (!criteria || !difficulty)
+      return res.status(400).json({
+        status: "error",
+        error: "Please provide both criteria and difficulty",
+      });
+
+    difficulty = difficulty ? difficulty.toLowerCase() : null;
+    criteria = criteria ? criteria.toLowerCase() : null;
+
+    const nodes = await Node.find({}, "-_id -__v");
+    const edges = await ProcessedEdge.find({}, "-_id -__v");
+
+    // Construct adjacency list
+    const adjacencyList = {};
+
+    // Iterate over nodes and initialize empty adjacency lists
+    nodes.forEach((node) => {
+      adjacencyList[node.text] = [];
     });
 
-  if (!criteria || !difficulty)
-    return res.status(400).json({
-      status: "error",
-      error: "Please provide both criteria and difficulty",
-    });
-
-  difficulty = difficulty ? difficulty.toLowerCase() : null;
-  criteria = criteria ? criteria.toLowerCase() : null;
-
-  const nodes = await Node.find({}, "-_id -__v");
-  const edges = await ProcessedEdge.find({}, "-_id -__v");
-
-  // Construct adjacency list
-  const adjacencyList = {};
-
-  // Iterate over nodes and initialize empty adjacency lists
-  nodes.forEach((node) => {
-    adjacencyList[node.text] = [];
-  });
-
-  if (criteria === "fastest") {
+    if (criteria === "fastest") {
+      // Populate adjacency lists with edges
+      edges.forEach((edge) => {
+        if (edge.color === "blue") {
+          weightMultiplier = 1;
+        } else if (edge.color === "red") {
+          weightMultiplier = 1.2;
+        } else if (edge.color === "black") {
+          weightMultiplier = 2;
+        }
+        adjacencyList[edge.start].push({
+          node: edge.end,
+          weight: (edge.weight * weightMultiplier) / 50,
+          name: edge.name,
+          color: edge.color,
+        });
+      });
+    } else if (criteria === "easiest") {
+      edges.forEach((edge) => {
+        let weightMultiplier = 1;
+        if (edge.color === "blue") {
+          weightMultiplier = 1;
+        } else if (edge.color === "red") {
+          weightMultiplier = 1.2;
+        } else if (edge.color === "black") {
+          weightMultiplier = 2;
+        }
+        adjacencyList[edge.start].push({
+          node: edge.end,
+          weight: edge.weight * weightMultiplier,
+          name: edge.name,
+          color: edge.color,
+        });
+      });
+    }
     // Populate adjacency lists with edges
-    edges.forEach((edge) => {
-      if (edge.color === "blue") {
-        weightMultiplier = 1;
-      } else if (edge.color === "red") {
-        weightMultiplier = 1.2;
-      } else if (edge.color === "black") {
-        weightMultiplier = 2;
-      }
-      adjacencyList[edge.start].push({
-        node: edge.end,
-        weight: (edge.weight * weightMultiplier) / 50,
-        name: edge.name, // Include the name of the edge
-        color: edge.color,
+    else if (criteria === "shortest") {
+      edges.forEach((edge) => {
+        adjacencyList[edge.start].push({
+          node: edge.end,
+          weight: edge.weight,
+          name: edge.name,
+          color: edge.color,
+        });
       });
-    });
-  } else if (criteria === "easiest") {
-    edges.forEach((edge) => {
-      let weightMultiplier = 1; // Default multiplier
-      if (edge.color === "blue") {
-        weightMultiplier = 1;
-      } else if (edge.color === "red") {
-        weightMultiplier = 1.2;
-      } else if (edge.color === "black") {
-        weightMultiplier = 2;
-      }
-      adjacencyList[edge.start].push({
-        node: edge.end,
-        weight: edge.weight * weightMultiplier,
-        name: edge.name, // Include the name of the edge
-        color: edge.color,
-      });
-    });
-  }
-  // Populate adjacency lists with edges
-  else if (criteria === "shortest") {
-    edges.forEach((edge) => {
-      adjacencyList[edge.start].push({
-        node: edge.end,
-        weight: edge.weight,
-        name: edge.name, // Include the name of the edge
-        color: edge.color,
-      });
-    });
-  }
+    }
 
-  const result = shortestPathHelper(
-    adjacencyList,
-    startPoint,
-    endPoint,
-    difficulty
-  );
+    const result = shortestPathHelper(
+      adjacencyList,
+      startPoint,
+      endPoint,
+      difficulty
+    );
 
-  if (!result || !result.shortestPath) {
-    return res.status(404).json({
+    if (!result || !result.shortestPath) {
+      return res.status(404).json({
+        status: "error",
+        error: "No path found.",
+      });
+    }
+
+    return res
+      .status(200)
+      .json({ status: "ok", shortestPath: result.shortestPath });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({
       status: "error",
-      error: "No path found.",
+      error: "Internal server error.",
+      code: 500,
     });
   }
-
-  return res
-    .status(200)
-    .json({ status: "ok", shortestPath: result.shortestPath });
 };
 
 const shortestPathHelper = (
