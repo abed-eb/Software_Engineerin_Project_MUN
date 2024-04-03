@@ -87,7 +87,11 @@ const getShortestPath = async (req, res) => {
     endPoint,
     difficulties
   );
-  return res.json({ status: "ok", shortestPath: result.shortestPath });
+  return res.json({
+    status: "ok",
+    shortestPath: result.shortestPath,
+    cost: result.cost,
+  });
 };
 
 const shortestPathHelper = (
@@ -99,7 +103,7 @@ const shortestPathHelper = (
   // Initialize distances with Infinity and predecessor as null
   const distances = {};
   const predecessors = {};
-
+  let totalDistance = 0;
   for (let node in adjacencyList) {
     distances[node] = Infinity;
     predecessors[node] = null;
@@ -125,7 +129,7 @@ const shortestPathHelper = (
     queue.splice(queue.indexOf(closestNode), 1);
 
     for (let neighbor of adjacencyList[closestNode]) {
-      const totalDistance = distances[closestNode] + neighbor.weight;
+      totalDistance = distances[closestNode] + neighbor.weight;
       let isCorrectColor = false;
       if (difficulties.includes(neighbor.color)) isCorrectColor = true;
       const isGreenEdge = neighbor.color === "green";
@@ -170,18 +174,18 @@ const shortestPathHelper = (
     currentNode = predecessors[currentNode].node;
   }
 
-  return { cost: distances[targetNode], shortestPath };
+  return { cost: totalDistance, shortestPath };
 };
 
 //Method for getting all paths
 const getAllPaths = async (req, res) => {
-  let { startPoint, endPoint } = req.body;
+  let { startPoint, endPoint, difficulties } = req.body;
 
   // Check if both start point and end point are provided
-  if (!startPoint || !endPoint)
+  if (!startPoint || !endPoint || !difficulties)
     return res.status(400).json({
       status: "error",
-      error: "Please provide both startpoint and endpoint",
+      error: "Please provide both startpoint and endpoint and difficulties",
     });
 
   const nodes = await Node.find({}, "-_id -__v");
@@ -196,11 +200,19 @@ const getAllPaths = async (req, res) => {
 
   edges.forEach((edge) => {
     if (adjacencyList[edge.start]) {
-      // Check if start node exists
-      adjacencyList[edge.start].push({
-        node: edge.end,
-        name: edge.name,
-      });
+      if (edge.color === "green")
+        // Check if start node exists and edge color is in difficulties list
+        adjacencyList[edge.start].push({
+          node: edge.end,
+          name: edge.name,
+        });
+      else if (difficulties.includes(edge.color)) {
+        // Check if start node exists and edge color is in difficulties list
+        adjacencyList[edge.start].push({
+          node: edge.end,
+          name: edge.name,
+        });
+      }
     }
   });
 
@@ -228,13 +240,19 @@ const getAllPaths = async (req, res) => {
 
   // Return only if there are paths
   if (allPaths.length) {
+    // allPaths.forEach(path => {
+    //   for (let i = 0; i < path.length; i++) {
+    //     const edge = path[i];
+    //     if (edge)
+    //   }
+    // });
     return res.status(200).json({ status: "ok", paths: allPaths });
   } else {
     return res.status(404).json({ status: "error", error: "No paths found" });
   }
 };
 
-//Method for finding all Paths (DFS algorithm is used)
+// Method for finding all Paths (DFS algorithm is used)
 const getAllPathsHelper = (currentNode, end, adjacencyList, path, allPaths) => {
   if (currentNode === end) {
     allPaths.push([...path]);

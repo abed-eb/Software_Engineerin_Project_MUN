@@ -42,6 +42,7 @@ const Graph = () => {
   const [redSelected, setRedSelected] = useState(true);
   const [blackSelected, setBlackSelected] = useState(true);
   const [allPaths, setAllPath] = useState([]);
+  const [shortestPathDist, setShortestPathDist] = useState(0);
 
   useEffect(() => {
     getGraph();
@@ -56,7 +57,6 @@ const Graph = () => {
   }, [rawLines, rawPoints]);
 
   const showPath = () => {
-    console.log(shortestPath);
     if (shortestPath.length > 0) {
       let edgesCopy = [...edges];
       let shortestPathCopy = [...shortestPath];
@@ -69,8 +69,6 @@ const Graph = () => {
             e.end === edge.endName &&
             e.name === edge.name
           ) {
-            console.log("found");
-            console.log(edgesCopy[i].fill);
             edgesCopy[i].strokeWidth = 3;
             edgesCopy[i].dash = [10, 5];
           } else if (
@@ -78,8 +76,6 @@ const Graph = () => {
             e.start === edge.endName &&
             e.name === edge.name
           ) {
-            console.log("found");
-            console.log(edgesCopy[i].fill);
             edgesCopy[i].strokeWidth = 3;
             edgesCopy[i].dash = [10, 5];
           }
@@ -103,8 +99,6 @@ const Graph = () => {
               e.end === edge.endName &&
               e.name === edge.name
             ) {
-              console.log("found");
-              console.log(edgesCopy[i].fill);
               edgesCopy[i].strokeWidth = 3;
               edgesCopy[i].dash = [10, 5];
             } else if (
@@ -112,8 +106,6 @@ const Graph = () => {
               e.start === edge.endName &&
               e.name === edge.name
             ) {
-              console.log("found");
-              console.log(edgesCopy[i].fill);
               edgesCopy[i].strokeWidth = 3;
               edgesCopy[i].dash = [10, 5];
             }
@@ -153,28 +145,29 @@ const Graph = () => {
 
   const getAllPath = async () => {
     let difficulties = [];
-    // if (blueSelected) difficulties.push("blue");
-    // if (redSelected) difficulties.push("red");
-    // if (blackSelected) difficulties.push("black");
-    // if (start && end && difficulty)
-    axios
-      .post("//localhost:4000/api/v1/all-paths", {
-        startPoint: start[0].text,
-        endPoint: end[0].text,
-      })
-      .then((res) => {
-        console.log(res.data?.paths);
-        showAllPaths(res.data?.paths);
-        setAllPath(res.data?.paths);
-        setShortestPath([]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    // else alert("Please select start and end point");
+    if (blueSelected) difficulties.push("blue");
+    if (redSelected) difficulties.push("red");
+    if (blackSelected) difficulties.push("black");
+    if (start && end)
+      axios
+        .post("//localhost:4000/api/v1/all-paths", {
+          startPoint: start[0].text,
+          endPoint: end[0].text,
+          difficulties: difficulties,
+        })
+        .then((res) => {
+          showAllPaths(res.data?.paths);
+          setAllPath(res.data?.paths);
+          setShortestPath([]);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    else alert("Please select start and end point");
   };
 
   const getSpecifiedPath = async () => {
+    setData();
     let difficulties = [];
     if (blueSelected) difficulties.push("blue");
     if (redSelected) difficulties.push("red");
@@ -188,7 +181,9 @@ const Graph = () => {
           criteria: criteria,
         })
         .then((res) => {
+          console.log(res);
           setShortestPath(res.data.shortestPath);
+          // setShortestPathDist(res.data.cost);
           setAllPath([]);
         })
         .catch((err) => {
@@ -265,40 +260,22 @@ const Graph = () => {
     setEdgeDataVisible(true);
   };
 
-  // const handleMouseLeave = () => {
-  //   setEdgeDataVisible(false);
-  // };
+  const handleMouseLeave = () => {
+    setEdgeDataVisible(false);
+  };
 
   return (
     <div>
-      <div className="text-gray-900 font-bold p-2">
+      <div className="text-gray-900 font-bold p-1">
         Click on you desired station (flags) and start routing.
       </div>
-      <div className="m-2 grid lg:grid-cols-6 md:grid-cols-2 grid-cols-1 gap-4 d-flex items-center content-center">
-        {/* <div>
-          <label
-            htmlFor="difficulties"
-            className="block mb-2 text-sm font-medium text-gray-900 text black"
-          >
-            Select Difficulty Level
-          </label>
-          <select
-            value={difficulty}
-            onChange={(e) => handleDifficultyChange(e)}
-            id="difficulties"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            {difficultyOptions.map((d) => {
-              return <option value={d.value}>{d.value}</option>;
-            })}
-          </select>
-        </div> */}
+      <div className="mx-2 grid lg:grid-cols-6 md:grid-cols-2 grid-cols-1 gap-4 d-flex items-center content-center">
         <div>
           <label
             htmlFor="difficulties"
             className="block mb-2 text-sm font-medium text-gray-900 text black"
           >
-            Select Path Type
+            Select Criteria
           </label>
           <select
             value={criteria}
@@ -319,14 +296,60 @@ const Graph = () => {
           className=" bg-blue-500 hover:bg-blue-700 text-white font-bold border border-blue-700 rounded p-5 md:mt-6"
           onClick={getSpecifiedPath}
         >
-          show path
+          Show path with criteria
         </button>
         <button
           className=" bg-purple-500 hover:bg-purple-700 text-white font-bold border border-purple-700 rounded p-5 md:mt-6"
           onClick={getAllPath}
         >
-          show all paths
+          Show all paths
         </button>
+        <div
+          className={
+            allPaths.length > 0 || shortestPath.length > 0
+              ? "mt-5 p-1 text-gray-900 h-32 w-96 overflow-y-auto bg-green-200 rounded"
+              : "mt-5 p-1 text-gray-900 h-32 w-full rounded"
+          }
+        >
+          {shortestPath.length > 0 ? (
+            <h5 className="font-normal text-md">
+              <div className="font-bold text-lg">Suggested Path:</div>
+              <div>
+                {shortestPath.map((edge, index) => {
+                  return (
+                    <div key={index}>
+                      {index + 1}
+                      {". "}
+                      {!edge.name.includes("Lift")
+                        ? edge.name + " (Slope)"
+                        : edge.name}
+                    </div>
+                  );
+                })}
+              </div>
+            </h5>
+          ) : (
+            allPaths.length > 0 &&
+            allPaths.map((path, index1) => {
+              return (
+                <div key={index1}>
+                  <h3 className="font-bold text-lg">Path {index1 + 1}</h3>
+                  {path.map((edge, index2) => {
+                    return (
+                      <div key={index2 + 100}>
+                        {index2 + 1}
+                        {". "}
+                        {!edge.name?.includes("Lift")
+                          ? edge.name + " (Slope)"
+                          : edge.name}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
       <div className="grid text-gray-900 lg:grid-cols-12 md:grid-cols-8 grid-cols-1 gap-4 d-flex items-center content-center">
         <h4 className="font-bold p-2 text-normal">Difficulty Level: </h4>
@@ -373,10 +396,10 @@ const Graph = () => {
           </label>
         </div>
       </div>
-      <div className="p-2  h-5 w-full">
+      <div className="p-2 h-3.5 w-full">
         <div className={edgeColor}>
           {edgeDataVisible && (
-            <div className="w-full grid grid-cols-4 gap-4 d-flex items-center content-start">
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 d-flex items-center content-start">
               <div className="w-full d-flex items-center content-center">
                 <div>
                   <h3 className="font-bold text-lg">Slope/Lift Name: </h3>
@@ -393,49 +416,7 @@ const Graph = () => {
           )}
         </div>
       </div>
-      <div className="mt-6 p-2 text-gray-900 h-5 w-full">
-        {
-          shortestPath.length > 0 ? (
-            <h5 className="font-normal text-md">
-              <div className="font-bold text-lg">Suggested Path: </div>
-              {shortestPath.map((edge, index) => {
-                return (
-                  <div key={index}>
-                    {index + 1}
-                    {". "}
-                    {!edge.name.includes("Lift")
-                      ? edge.name + " (Slope)"
-                      : edge.name}
-                  </div>
-                );
-              })}
-            </h5>
-          ) : (
-            ""
-          )
-          // (
-          //   allPaths.length > 0 &&
-          //   allPaths.map((path, index1) => {
-          //     return (
-          //       <div key={index1}>
-          //         <h3 className="font-bold text-lg">Path {index1 + 1}</h3>
-          //         {path.map((edge, index2) => {
-          //           return (
-          //             <div key={index2 + 100}>
-          //               {index2 + 1}
-          //               {". "}
-          //               {!edge.name.includes("Lift")
-          //                 ? edge.name + " (Slope)"
-          //                 : edge.name}
-          //             </div>
-          //           );
-          //         })}
-          //       </div>
-          //     );
-          //   })
-          // )
-        }
-      </div>
+
       <Stage width={1450} height={650}>
         <Layer>
           <Text
@@ -448,35 +429,35 @@ const Graph = () => {
           />
           <Text
             x={20}
-            y={580}
+            y={480}
             text={"Blue: Easy Slopes"}
             fontSize={12}
             fill="#2563eb"
           />
           <Text
             x={20}
-            y={600}
+            y={500}
             text={"Red: Medium Slopes"}
             fontSize={12}
             fill="#dc2626"
           />
           <Text
             x={20}
-            y={620}
+            y={520}
             text={"Black: Difficult Slopes"}
             fontSize={12}
             fill="#020617"
           />
           <Text
             x={20}
-            y={640}
+            y={540}
             text={"Green: Lifts"}
             fontSize={12}
             fill="#16a34a"
           />
           <Text
             x={20}
-            y={660}
+            y={560}
             text={"- - - - - : Suggested Path"}
             fontSize={13}
             fontStyle="bold"
@@ -523,7 +504,7 @@ const Graph = () => {
                 /> */}
                 <div data-tooltip-id={edge.name}>
                   <Line
-                    onClick={() => showLineDetail(edge)}
+                    // onClick={() => showLineDetail(edge)}
                     points={
                       edge.fill === "green"
                         ? [edge.startx, edge.starty, edge.endx, edge.endy]
@@ -560,8 +541,8 @@ const Graph = () => {
                     tension={0.5}
                     listening
                     dash={edge.dash}
-                    // onMouseEnter={(e) => handleMouseEnter(e, edge)}
-                    // onMouseLeave={handleMouseLeave}
+                    onMouseEnter={(e) => handleMouseEnter(e, edge)}
+                    onMouseLeave={handleMouseLeave}
                   />
                 </div>
               </div>
