@@ -173,4 +173,58 @@ const shortestPathHelper = (
   return { cost: distances[targetNode], shortestPath };
 };
 
-module.exports = { getCoordinates, getShortestPath };
+//Method for getting all paths
+const getAllPaths = async (req, res) => {
+  let { startPoint, endPoint } = req.body;
+  if (!startPoint || !endPoint)
+    return res.json({
+      status: "error",
+      error: "Please provide both startpoint and endpoint",
+    });
+
+  const nodes = await Node.find({}, "-_id -__v");
+  const edges = await ProcessedEdge.find({}, "-_id -__v");
+
+  const adjacencyList = {};
+
+  nodes.forEach((node) => {
+    adjacencyList[node.text] = [];
+  });
+
+  edges.forEach((edge) => {
+    adjacencyList[edge.start].push({
+      node: edge.end,
+      name: edge.name,
+    });
+  });
+
+  const allPaths = [];
+  const path = [];
+
+  getAllPathsHelper(startPoint, endPoint, adjacencyList, path, allPaths);
+  console.log(allPaths);
+
+  //Return only if there are paths
+  if (allPaths.length) {
+    return res.json({ status: "ok", paths: allPaths });
+  }
+};
+
+//Method for finding all Paths (DFS algorithm is used)
+const getAllPathsHelper = (currentNode, end, adjacencyList, path, allPaths) => {
+  if (currentNode === end) {
+    allPaths.push([...path]);
+    return;
+  }
+
+  for (const neighbor of adjacencyList[currentNode]) {
+    const { node, name } = neighbor;
+    if (!path.some((edge) => edge.end === node)) {
+      path.push({ start: currentNode, end: node, name });
+      getAllPathsHelper(node, end, adjacencyList, path, allPaths);
+      path.pop();
+    }
+  }
+};
+
+module.exports = { getCoordinates, getShortestPath, getAllPaths };
