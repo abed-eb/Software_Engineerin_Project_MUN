@@ -2,17 +2,6 @@ const Node = require("../models/node.model");
 const Edge = require("../models/edge.model");
 const ProcessedEdge = require("../models/pedge.model");
 
-// Get all Nodes
-const getAllNodes = async (req, res) => {
-  try {
-    const nodes = await Node.find({}, "-_id -__v");
-    const edges = await Edge.find({}, "-_id -__v");
-    return res.json({ status: "ok", nodes, edges });
-  } catch (error) {
-    return res.json({ status: "error", error: "No nodes found" });
-  }
-};
-
 const createEdge = () => {
   const NodesData = [
     { x: 250, y: 612, text: "A" },
@@ -769,4 +758,4 @@ const createProcessedEdge = () => {
     .catch((err) => console.error("Error saving pedges data:", err));
 };
 
-module.exports = { getAllNodes, createEdge, createProcessedEdge };
+module.exports = { createEdge, createProcessedEdge };
