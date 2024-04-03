@@ -17,13 +17,13 @@ const getShortestPath = async (req, res) => {
   let { startPoint, endPoint, difficulty, criteria } = req.body;
 
   if (!startPoint || !endPoint)
-    return res.json({
+    return res.status(400).json({
       status: "error",
       error: "Please provide both startpoint and endpoint",
     });
 
   if (!criteria || !difficulty)
-    return res.json({
+    return res.status(400).json({
       status: "error",
       error: "Please provide both criteria and difficulty",
     });
@@ -95,7 +95,17 @@ const getShortestPath = async (req, res) => {
     endPoint,
     difficulty
   );
-  return res.json({ status: "ok", shortestPath: result.shortestPath });
+
+  if (!result || !result.shortestPath) {
+    return res.status(404).json({
+      status: "error",
+      error: "No path found.",
+    });
+  }
+
+  return res
+    .status(200)
+    .json({ status: "ok", shortestPath: result.shortestPath });
 };
 
 const shortestPathHelper = (
