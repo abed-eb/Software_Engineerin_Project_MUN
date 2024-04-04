@@ -45,6 +45,20 @@ const Graph = () => {
   const [shortestPathDist, setShortestPathDist] = useState(0);
 
   useEffect(() => {
+    let points = [...nodes];
+    for (let i = 0; i < points.length; i++) {
+      const point = points[i];
+      let p = {
+        x: point?.x,
+        y: point?.y,
+        text: point.text,
+        textx: point?.x - 20,
+        texty: point?.y - 30,
+        fill: "green",
+      };
+      points[i] = p;
+    }
+    setNodes(points);
     getGraph();
   }, []);
 
@@ -139,7 +153,7 @@ const Graph = () => {
   };
 
   const handleCriteriaChange = (e) => {
-    setData();
+    // setData();
     setCriteria(e.target.value);
   };
 
@@ -216,7 +230,7 @@ const Graph = () => {
         y: point?.y,
         text: point.text,
         textx: point?.x - 20,
-        texty: point?.y - 30,
+        texty: point?.y - 47,
         fill: "green",
       };
       points[i] = p;
@@ -264,46 +278,73 @@ const Graph = () => {
     setEdgeDataVisible(false);
   };
 
+  const handleReset = () => {
+    setAllPath([]);
+    setShortestPath([]);
+    setStart(null);
+    setEnd(null);
+    setData();
+  };
+
   return (
     <div>
       <div className="text-gray-900 font-bold p-1">
-        Click on you desired station (flags) and start routing.
+        <h3>
+          1. Select start point and end point by clicking on the blue flags in
+          the below graph.
+        </h3>
+        <h3>
+          2. You can selected you prefered route color ba selecting or
+          deselecting the check boxes.
+        </h3>
+        <h3>4. Use Reset button to remove your changes and start over.</h3>
       </div>
       <div className="mx-2 grid lg:grid-cols-6 md:grid-cols-2 grid-cols-1 gap-4 d-flex items-center content-center">
-        <div>
-          <label
-            htmlFor="difficulties"
-            className="block mb-2 text-sm font-medium text-gray-900 text black"
-          >
-            Select Criteria
-          </label>
-          <select
-            value={criteria}
-            onChange={(e) => handleCriteriaChange(e)}
-            id="difficulties"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            {typeOptions.map((t, index) => {
-              return (
-                <option key={index} value={t.value}>
-                  {t.value}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <button
-          className=" bg-blue-500 hover:bg-blue-700 text-white font-bold border border-blue-700 rounded p-5 md:mt-6"
-          onClick={getSpecifiedPath}
-        >
-          Show path with criteria
-        </button>
         <button
           className=" bg-purple-500 hover:bg-purple-700 text-white font-bold border border-purple-700 rounded p-5 md:mt-6"
           onClick={getAllPath}
         >
           Show all paths
         </button>
+        <button
+          className=" bg-gray-600 hover:bg-gray-700 text-white font-bold border border-gray-800 rounded p-5 md:mt-6"
+          onClick={handleReset}
+        >
+          Reset
+        </button>
+        {(allPaths?.length > 0 || shortestPath.length !== 0) && (
+          <>
+            <div>
+              <label
+                htmlFor="difficulties"
+                className="block mb-2 text-sm font-medium text-gray-900 text black"
+              >
+                Select Criteria
+              </label>
+              <select
+                value={criteria}
+                onChange={(e) => handleCriteriaChange(e)}
+                id="difficulties"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                {typeOptions.map((t, index) => {
+                  return (
+                    <option key={index} value={t.value}>
+                      {t.value}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <button
+              className=" bg-blue-500 hover:bg-blue-700 text-white font-bold border border-blue-700 rounded p-5 md:mt-6"
+              onClick={getSpecifiedPath}
+            >
+              Show path with criteria
+            </button>
+          </>
+        )}
+
         <div
           className={
             allPaths.length > 0 || shortestPath.length > 0
@@ -417,7 +458,7 @@ const Graph = () => {
         </div>
       </div>
 
-      <Stage width={1450} height={650}>
+      <Stage width={1450} height={600}>
         <Layer>
           <Text
             x={600}
@@ -429,35 +470,35 @@ const Graph = () => {
           />
           <Text
             x={20}
-            y={480}
+            y={500}
             text={"Blue: Easy Slopes"}
             fontSize={12}
             fill="#2563eb"
           />
           <Text
             x={20}
-            y={500}
+            y={520}
             text={"Red: Medium Slopes"}
             fontSize={12}
             fill="#dc2626"
           />
           <Text
             x={20}
-            y={520}
+            y={540}
             text={"Black: Difficult Slopes"}
             fontSize={12}
             fill="#020617"
           />
           <Text
             x={20}
-            y={540}
+            y={560}
             text={"Green: Lifts"}
             fontSize={12}
             fill="#16a34a"
           />
           <Text
             x={20}
-            y={560}
+            y={580}
             text={"- - - - - : Suggested Path"}
             fontSize={13}
             fontStyle="bold"
@@ -494,14 +535,6 @@ const Graph = () => {
           {edges.map((edge, index) => {
             return (
               <div key={index}>
-                {/* <Text
-                  x={(edge.startx + edge.endx) / 2 - 5}
-                  y={(edge.starty + edge.endy) / 2 + 4}
-                  text={edge.name.includes("Lift") ? edge.name : ""}
-                  // text={!edge.name.includes("Lift") ? edge.name : ""}
-                  fontSize={8}
-                  fill="#56cfff"
-                /> */}
                 <div data-tooltip-id={edge.name}>
                   <Line
                     // onClick={() => showLineDetail(edge)}
