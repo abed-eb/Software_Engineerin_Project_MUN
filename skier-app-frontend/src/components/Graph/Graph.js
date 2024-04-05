@@ -294,10 +294,14 @@ const Graph = () => {
           the below graph.
         </h3>
         <h3>
-          2. You can selected you prefered route color ba selecting or
+          2. You can select your prefered route colors by selecting or
           deselecting the check boxes.
         </h3>
         <h3>4. Use Reset button to remove your changes and start over.</h3>
+        <h3>
+          5. Each time you change a color or criteria you have to click on the
+          button to see the changes.
+        </h3>
       </div>
       <div className="mx-2 grid lg:grid-cols-6 md:grid-cols-2 grid-cols-1 gap-4 d-flex items-center content-center">
         <button
