@@ -32,7 +32,7 @@ const getShortestPath = async (req, res) => {
   nodes.forEach((node) => {
     adjacencyList[node.text] = [];
   });
-
+  weightMultiplier = 1;
   if (criteria === "fastest") {
     // Populate adjacency lists with edges
     edges.forEach((edge) => {
