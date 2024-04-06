@@ -51,7 +51,6 @@ const getShortestPath = async (req, res) => {
       });
     });
   } else if (criteria === "easiest") {
-    console.log("here");
     edges.forEach((edge) => {
       let weightMultiplier = 1; // Default multiplier
       if (edge.color === "blue") {
@@ -149,8 +148,6 @@ const shortestPathHelper = (
           };
         }
       } else {
-        console.log("here2");
-        console.log(totalDistance, ", ", distances[neighbor.node]);
         if (totalDistance < distances[neighbor.node]) {
           distances[neighbor.node] = totalDistance;
           predecessors[neighbor.node] = {
@@ -245,7 +242,6 @@ const getAllPaths = async (req, res) => {
     allPaths,
     visited
   );
-  console.log(allPaths);
 
   // Return only if there are paths
   if (allPaths.length) {
