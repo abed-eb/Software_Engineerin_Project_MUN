@@ -235,7 +235,16 @@ const getAllPaths = async (req, res) => {
   const allPaths = [];
   const path = [];
 
-  getAllPathsHelper(startPoint, endPoint, adjacencyList, path, allPaths);
+  const visited = new Set(); // Initialize visited set
+
+  getAllPathsHelper(
+    startPoint,
+    endPoint,
+    adjacencyList,
+    path,
+    allPaths,
+    visited
+  );
   console.log(allPaths);
 
   // Return only if there are paths
@@ -253,20 +262,31 @@ const getAllPaths = async (req, res) => {
 };
 
 // Method for finding all Paths (DFS algorithm is used)
-const getAllPathsHelper = (currentNode, end, adjacencyList, path, allPaths) => {
+const getAllPathsHelper = (
+  currentNode,
+  end,
+  adjacencyList,
+  path,
+  allPaths,
+  visited
+) => {
   if (currentNode === end) {
     allPaths.push([...path]);
     return;
   }
 
+  visited.add(currentNode);
+
   for (const neighbor of adjacencyList[currentNode]) {
     const { node, name } = neighbor;
-    if (!path.some((edge) => edge.end === node)) {
+    if (!visited.has(node)) {
       path.push({ start: currentNode, end: node, name });
-      getAllPathsHelper(node, end, adjacencyList, path, allPaths);
+      getAllPathsHelper(node, end, adjacencyList, path, allPaths, visited);
       path.pop();
     }
   }
+
+  visited.delete(currentNode);
 };
 
 module.exports = { getCoordinates, getShortestPath, getAllPaths };
