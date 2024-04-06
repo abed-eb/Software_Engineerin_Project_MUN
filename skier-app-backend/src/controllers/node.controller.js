@@ -4,21 +4,21 @@ const ProcessedEdge = require("../models/pedge.model");
 
 const createEdge = () => {
   const NodesData = [
-    { x: 250, y: 612, text: "A" },
+    { x: 250, y: 530, text: "A" },
     { x: 200, y: 220, text: "B" },
-    { x: 490, y: 590, text: "C" },
+    { x: 490, y: 570, text: "C" },
     { x: 390, y: 350, text: "D" },
     { x: 330, y: 120, text: "E" },
     { x: 434, y: 189, text: "F" },
     { x: 530, y: 325, text: "G" },
-    { x: 890, y: 355, text: "H" },
-    { x: 990, y: 355, text: "I" },
-    { x: 1134, y: 375, text: "J" },
-    { x: 1200, y: 475, text: "K" },
-    { x: 1400, y: 90, text: "L" },
-    { x: 1090, y: 268, text: "M" },
-    { x: 970, y: 215, text: "O" },
-    { x: 1190, y: 180, text: "N" },
+    { x: 690, y: 355, text: "H" },
+    { x: 790, y: 355, text: "I" },
+    { x: 970, y: 375, text: "J" },
+    { x: 1050, y: 485, text: "K" },
+    { x: 1200, y: 280, text: "L" },
+    { x: 890, y: 268, text: "M" },
+    { x: 870, y: 215, text: "O" },
+    { x: 1000, y: 180, text: "N" },
   ];
 
   Node.insertMany(NodesData)
