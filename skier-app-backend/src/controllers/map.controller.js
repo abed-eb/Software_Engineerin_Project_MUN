@@ -232,7 +232,7 @@ const getAllPaths = async (req, res) => {
   const allPaths = [];
   const path = [];
 
-  const visited = new Set(); // Initialize visited set
+  const visited = new Set();
 
   getAllPathsHelper(
     startPoint,
@@ -243,14 +243,7 @@ const getAllPaths = async (req, res) => {
     visited
   );
 
-  // Return only if there are paths
   if (allPaths.length) {
-    // allPaths.forEach(path => {
-    //   for (let i = 0; i < path.length; i++) {
-    //     const edge = path[i];
-    //     if (edge)
-    //   }
-    // });
     return res.status(200).json({ status: "ok", paths: allPaths });
   } else {
     return res.status(404).json({ status: "error", error: "No paths found" });
